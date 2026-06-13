@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white dark:bg-[#0A0F1E] text-slate-900 dark:text-slate-100 font-sans antialiased transition-colors duration-200;
+  }
+
+  ::selection {
+    @apply bg-blue-500/30;
+  }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400 dark:bg-slate-600;
+  }
+}
+
+@layer utilities {
+  .animation-delay-200  { animation-delay: 200ms; }
+  .animation-delay-400  { animation-delay: 400ms; }
+  .animation-delay-600  { animation-delay: 600ms; }
+  .animation-delay-1000 { animation-delay: 1000ms; }
+  .animation-delay-2000 { animation-delay: 2000ms; }
+  .animation-delay-4000 { animation-delay: 4000ms; }
+
+  .glass {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20;
+  }
+
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400;
+    background-size: 400% 400%;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  .glow-blue  { box-shadow: 0 0 30px rgba(59,130,246,0.4); }
+  .glow-sm    { box-shadow: 0 0 15px rgba(59,130,246,0.25); }
+
+  /* Dark mode card surface shorthand */
+  .card-dark {
+    @apply bg-[#0F172A] border border-slate-800 rounded-2xl;
+  }
+}

@@ -1,0 +1,19 @@
+# =============================================
+# BoutiqueKi Frontend — Dockerfile Dev (Vite HMR)
+# =============================================
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copier les manifestes et installer les dépendances
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Copier le code source (sera overridé par le volume en mode dev)
+COPY . .
+
+EXPOSE 5173
+
+# Vite doit écouter sur 0.0.0.0 pour être accessible hors du container
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

@@ -1,0 +1,77 @@
+# =============================================
+# BoutiqueKi — Docker Compose Dev (Hot-Reload)
+# =============================================
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+# OU:    make dev
+
+version: "3.9"
+
+services:
+  # ---- Database en mode développement ----
+  postgres:
+    image: postgres:15-alpine
+    container_name: boutiqueki-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: boutiki
+    ports:
+      - "5432:5432"
+    networks:
+      - boutiqueki-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  # ---- Backend en mode développement ----
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: boutiqueki-backend-dev
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Port debug Node.js
+    volumes:
+      # Hot-reload: le code local est monté dans le container
+      - ./backend/src:/app/src:ro
+      - ./backend/.env:/app/.env:ro
+    networks:
+      - boutiqueki-network
+    command: ["npm", "run", "dev"]
+
+  # ---- Frontend en mode développement (Vite dev server) ----
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: boutiqueki-frontend-dev
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - "5173:5173"
+    volumes:
+      # Hot-reload: le code local est monté
+      - ./frontend/src:/app/src:ro
+      - ./frontend/public:/app/public:ro
+      - ./frontend/index.html:/app/index.html:ro
+    depends_on:
+      - backend
+      - postgres
+    networks:
+      - boutiqueki-network
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+
+networks:
+  boutiqueki-network:
+    driver: bridge
+    name: boutiqueki-network
+
+volumes:
+  postgres-data:
