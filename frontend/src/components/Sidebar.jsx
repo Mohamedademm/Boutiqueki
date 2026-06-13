@@ -4,7 +4,7 @@ import useAuthStore from '../store/useAuthStore';
 import {
   LayoutDashboard, Package, Settings, LogOut, Store,
   ShoppingBag, Warehouse, MonitorPlay, ShieldAlert,
-  ChevronLeft, ChevronRight, Users, Building2, ChevronDown, ChevronUp,
+  ChevronLeft, ChevronRight, Users, Building2, ChevronDown, ChevronUp, BarChart3,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -13,6 +13,7 @@ const navItems = [
   { name: 'Produits', href: '/dashboard/products', icon: Package },
   { name: 'Stock', href: '/dashboard/stock', icon: Warehouse },
   { name: 'Commandes', href: '/dashboard/orders', icon: ShoppingBag },
+  { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
   { name: 'Éditeur Visuel', href: '/builder', icon: MonitorPlay },
   { name: 'Paramètres', href: '/dashboard/settings', icon: Settings },
 ];

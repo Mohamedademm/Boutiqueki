@@ -37,7 +37,7 @@ function getPool() {
           : false,
       max: 20,                   // Max connections in the pool
       idleTimeoutMillis: 30000,  // Close idle connections after 30s
-      connectionTimeoutMillis: 10000, // Fail if connection takes > 10s
+      connectionTimeoutMillis: 20000, // Fail if connection takes > 20s (Neon wakeup)
     });
 
     // Log pool errors

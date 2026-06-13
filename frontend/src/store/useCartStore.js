@@ -12,7 +12,7 @@ const useCartStore = create(
       openCart: () => set({ isOpen: true }),
       closeCart: () => set({ isOpen: false }),
 
-      addItem: (product, quantity = 1, variants = {}) => {
+      addItem: (product, quantity = 1, variants = {}, variantId = null) => {
         set((state) => {
           // If adding from a different shop, clear cart or warn (we'll auto-clear for simplicity)
           let currentItems = state.items;
@@ -24,9 +24,9 @@ const useCartStore = create(
           currentShopId = product.shopId;
 
           const existingItemIndex = currentItems.findIndex(
-            (item) => 
-              item.id === product.id && 
-              JSON.stringify(item.selectedVariants) === JSON.stringify(variants)
+            (item) =>
+              item.id === product.id &&
+              (item.variantId || null) === (variantId || null)
           );
 
           if (existingItemIndex !== -1) {
@@ -37,7 +37,7 @@ const useCartStore = create(
           } else {
             // Add new item
             return {
-              items: [...currentItems, { ...product, quantity, selectedVariants: variants }],
+              items: [...currentItems, { ...product, quantity, selectedVariants: variants, variantId }],
               shopId: currentShopId,
               isOpen: true
             };

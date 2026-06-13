@@ -264,7 +264,7 @@ const BoutiqueTab = () => {
 
       <div className="grid grid-cols-2 gap-3">
         {[
-          { label: 'Thème', value: shop.theme || 'classic' },
+          { label: 'Thème', value: typeof shop.theme === 'string' ? shop.theme : (shop.theme?.template || 'Personnalisé') },
           { label: 'Slug', value: `/${shop.slug}` },
           { label: 'Statut', value: shop.status || 'active' },
           { label: 'Créée le', value: shop.createdAt ? new Date(shop.createdAt).toLocaleDateString('fr-FR') : '—' },

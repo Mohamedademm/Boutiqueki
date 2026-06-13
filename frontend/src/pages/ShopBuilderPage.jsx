@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/useAuthStore';
 import axios from '../utils/axios';
 import { ensureGoogleFont } from '../utils/fonts';
+import ImageUploader from '../components/ImageUploader';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /* ─── Color presets ────────────────────────────────────────── */
@@ -576,30 +577,20 @@ const ShopBuilderPage = () => {
                     />
                   </div>
                   <div>
-                    <SectionTitle>URL du logo</SectionTitle>
-                    <input
-                      type="url"
-                      value={shop.logo}
-                      onChange={e => updateField('logo', e.target.value)}
-                      placeholder="https://exemple.com/logo.png"
-                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all"
+                    <SectionTitle>Logo</SectionTitle>
+                    <ImageUploader
+                      value={shop.logo ? [shop.logo] : []}
+                      onChange={arr => updateField('logo', arr[0] || '')}
+                      max={1}
                     />
-                    {shop.logo && (
-                      <img src={shop.logo} alt="logo" className="mt-3 h-14 w-auto rounded-lg border border-slate-200 dark:border-slate-700 object-contain bg-slate-50 dark:bg-slate-900 p-2" onError={e => e.target.style.display='none'} />
-                    )}
                   </div>
                   <div>
-                    <SectionTitle>URL de la bannière</SectionTitle>
-                    <input
-                      type="url"
-                      value={shop.banner}
-                      onChange={e => updateField('banner', e.target.value)}
-                      placeholder="https://exemple.com/banner.jpg"
-                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all"
+                    <SectionTitle>Bannière</SectionTitle>
+                    <ImageUploader
+                      value={shop.banner ? [shop.banner] : []}
+                      onChange={arr => updateField('banner', arr[0] || '')}
+                      max={1}
                     />
-                    {shop.banner && (
-                      <img src={shop.banner} alt="banner" className="mt-3 w-full h-20 rounded-xl border border-slate-200 dark:border-slate-700 object-cover" onError={e => e.target.style.display='none'} />
-                    )}
                   </div>
 
                   {/* Preview slug */}

@@ -1,26 +1,29 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import useAuthStore from './store/useAuthStore';
 
-// Pages
-import LandingPage from './pages/LandingPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import OnboardingPage from './pages/OnboardingPage';
-import DashboardLayout from './pages/DashboardLayout';
-import DashboardPage from './pages/DashboardPage';
-import ProductsPage from './pages/ProductsPage';
-import ProductFormPage from './pages/ProductFormPage';
-import StockPage from './pages/StockPage';
-import ShopBuilderPage from './pages/ShopBuilderPage';
-import PublicShopPage from './pages/PublicShopPage';
-import PublicProductPage from './pages/PublicProductPage';
-import CheckoutPage from './pages/CheckoutPage';
-import OrdersPage from './pages/OrdersPage';
-import AdminDashboardPage from './pages/AdminDashboardPage';
-import AdminUsersPage from './pages/AdminUsersPage';
-import AdminShopsPage from './pages/AdminShopsPage';
-import SettingsPage from './pages/SettingsPage';
+// Pages (lazy-loaded → each route is its own chunk, smaller initial bundle)
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
+const OnboardingPage = lazy(() => import('./pages/OnboardingPage'));
+const DashboardLayout = lazy(() => import('./pages/DashboardLayout'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const ProductsPage = lazy(() => import('./pages/ProductsPage'));
+const ProductFormPage = lazy(() => import('./pages/ProductFormPage'));
+const StockPage = lazy(() => import('./pages/StockPage'));
+const ShopBuilderPage = lazy(() => import('./pages/ShopBuilderPage'));
+const PublicShopPage = lazy(() => import('./pages/PublicShopPage'));
+const PublicProductPage = lazy(() => import('./pages/PublicProductPage'));
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
+const OrdersPage = lazy(() => import('./pages/OrdersPage'));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
+const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'));
+const AdminUsersPage = lazy(() => import('./pages/AdminUsersPage'));
+const AdminShopsPage = lazy(() => import('./pages/AdminShopsPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
 // Simple loading spinner
 const FullScreenLoader = () => (
@@ -52,10 +55,13 @@ function App() {
 
   return (
     <Router>
+      <Suspense fallback={<FullScreenLoader />}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/s/:slug" element={<PublicShopPage />} />
         <Route path="/s/:slug/p/:id" element={<PublicProductPage />} />
@@ -93,6 +99,7 @@ function App() {
           <Route path="admin/users" element={<AdminUsersPage />} />
           <Route path="admin/shops" element={<AdminShopsPage />} />
           <Route path="orders" element={<OrdersPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="products" element={<ProductsPage />} />
           <Route path="products/new" element={<ProductFormPage />} />
@@ -100,6 +107,7 @@ function App() {
           <Route path="stock" element={<StockPage />} />
         </Route>
       </Routes>
+      </Suspense>
     </Router>
   );
 }

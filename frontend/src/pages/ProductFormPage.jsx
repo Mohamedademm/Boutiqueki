@@ -16,18 +16,18 @@ import {
   EyeOff,
   CheckCircle,
   AlertCircle,
-  Link as LinkIcon,
 } from 'lucide-react';
 import { useShop } from '../hooks/useShop';
 import { useCategories } from '../hooks/useCategories';
 import { useCreateProduct, useProduct, useUpdateProduct } from '../hooks/useProducts';
+import ImageUploader from '../components/ImageUploader';
 
 /* ─── helpers ─────────────────────────────────────────────────── */
 const emptyVariant = () => ({ name: 'Standard', sku: '', price: '', stock_qty: 0, alert_threshold: 5 });
 
 const initialForm = {
   name: '', description: '', price: '', compare_price: '',
-  sku: '', status: 'draft', category_id: '', imagesText: '',
+  sku: '', status: 'draft', category_id: '', images: [],
   variants: [emptyVariant()],
 };
 
@@ -82,21 +82,6 @@ const StatusSelector = ({ value, onChange }) => {
           </button>
         );
       })}
-    </div>
-  );
-};
-
-/* ─── Image preview ──────────────────────────────────────────── */
-const ImagePreviews = ({ imagesText }) => {
-  const urls = imagesText.split('\n').map(u => u.trim()).filter(Boolean).slice(0, 4);
-  if (urls.length === 0) return null;
-  return (
-    <div className="flex gap-2 mt-3 flex-wrap">
-      {urls.map((url, i) => (
-        <div key={i} className="relative w-16 h-16 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-          <img src={url} alt={`preview-${i}`} className="w-full h-full object-cover" onError={e => { e.target.style.display = 'none'; }} />
-        </div>
-      ))}
     </div>
   );
 };
@@ -204,7 +189,7 @@ const ProductFormPage = () => {
       sku: product.sku || '',
       status: product.status || 'draft',
       category_id: product.category_id || '',
-      imagesText: (product.images || []).join('\n'),
+      images: product.images || [],
       variants: product.variants?.length > 0
         ? product.variants.map(v => ({ id: v.id, name: v.name || '', sku: v.sku || '', price: v.price == null ? '' : String(v.price), stock_qty: Number(v.stock_qty || 0), alert_threshold: Number(v.alert_threshold || 0) }))
         : [emptyVariant()],
@@ -227,7 +212,7 @@ const ProductFormPage = () => {
     sku: formData.sku.trim() || null,
     status: formData.status,
     category_id: formData.category_id || null,
-    images: formData.imagesText.split('\n').map(u => u.trim()).filter(Boolean),
+    images: formData.images,
     variants: formData.variants.map(v => ({
       ...(v.id ? { id: v.id } : {}),
       name: v.name.trim() || 'Standard',
@@ -374,25 +359,11 @@ const ProductFormPage = () => {
 
           {/* Images */}
           <SectionCard title="Images du produit" icon={ImageIcon} iconColor="text-purple-600">
-            <div>
-              <Label>URLs des images (une par ligne, max. 8)</Label>
-              <div className="relative">
-                <LinkIcon className="absolute left-3.5 top-3 w-4 h-4 text-slate-400 pointer-events-none" />
-                <textarea
-                  value={formData.imagesText}
-                  onChange={e => updateField('imagesText', e.target.value)}
-                  rows={4}
-                  className={`${inputClass} pl-10 font-mono text-xs`}
-                  placeholder={'https://exemple.com/image-1.jpg\nhttps://exemple.com/image-2.jpg'}
-                />
-              </div>
-              <ImagePreviews imagesText={formData.imagesText} />
-              {formData.imagesText && (
-                <p className="mt-2 text-xs text-slate-400">
-                  {formData.imagesText.split('\n').filter(u => u.trim()).length} image(s) ajoutée(s)
-                </p>
-              )}
-            </div>
+            <ImageUploader
+              value={formData.images}
+              onChange={imgs => updateField('images', imgs)}
+              max={8}
+            />
           </SectionCard>
 
           {/* Variants */}

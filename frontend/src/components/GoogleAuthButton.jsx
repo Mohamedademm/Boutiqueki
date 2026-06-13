@@ -18,14 +18,14 @@ const GoogleAuthButton = ({ redirectTo = '/dashboard', text = 'continue_with' })
   };
 
   return (
-    <div className="flex justify-center w-full [&>div]:w-full">
+    <div className="flex justify-center w-full">
       <GoogleLogin
         onSuccess={handleSuccess}
         onError={() => useAuthStore.setState({ error: 'Connexion Google annulée ou échouée.' })}
         text={text}
         shape="rectangular"
         size="large"
-        width="100%"
+        width={400}
         locale="fr"
       />
     </div>

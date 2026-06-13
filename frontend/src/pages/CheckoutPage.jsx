@@ -15,6 +15,10 @@ const CheckoutPage = () => {
   const [error, setError] = useState(null);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderData, setOrderData] = useState(null);
+  const [couponCode, setCouponCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [couponMsg, setCouponMsg] = useState(null);
+  const [applyingCoupon, setApplyingCoupon] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -37,7 +41,23 @@ const CheckoutPage = () => {
 
   const subtotal = getCartTotal();
   const shippingFee = subtotal >= 50 ? 0 : 5;
-  const total = subtotal + shippingFee;
+  const total = Math.max(0, subtotal - discount) + shippingFee;
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setApplyingCoupon(true);
+    setCouponMsg(null);
+    try {
+      const res = await api.post('/public/coupons/validate', { shopId, code: couponCode.trim(), subtotal });
+      setDiscount(res.data.data.discount);
+      setCouponMsg({ type: 'ok', text: `Code appliqué : -${res.data.data.discount.toFixed(2)} €` });
+    } catch (err) {
+      setDiscount(0);
+      setCouponMsg({ type: 'err', text: err.response?.data?.message || 'Code invalide' });
+    } finally {
+      setApplyingCoupon(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -69,12 +89,14 @@ const CheckoutPage = () => {
         },
         items: items.map(item => ({
           productId: item.id,
+          variantId: item.variantId || null,
           name: item.name,
           quantity: item.quantity,
           price: item.price,
-          selectedVariants: item.selectedVariants
+          selectedVariants: item.selectedVariants || {}
         })),
-        paymentMethod: formData.paymentMethod
+        paymentMethod: formData.paymentMethod,
+        couponCode: discount > 0 ? couponCode.trim() : null
       };
 
       const res = await api.post('/checkout', payload);
@@ -281,11 +303,43 @@ const CheckoutPage = () => {
               ))}
             </div>
 
+            {/* Promo code */}
+            <div className="border-t border-slate-100 pt-4 mb-4">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={couponCode}
+                  onChange={e => setCouponCode(e.target.value)}
+                  placeholder="Code promo"
+                  className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={applyCoupon}
+                  disabled={applyingCoupon}
+                  className="px-4 py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-60"
+                >
+                  {applyingCoupon ? '…' : 'Appliquer'}
+                </button>
+              </div>
+              {couponMsg && (
+                <p className={`mt-2 text-xs font-medium ${couponMsg.type === 'ok' ? 'text-emerald-600' : 'text-red-600'}`}>
+                  {couponMsg.text}
+                </p>
+              )}
+            </div>
+
             <div className="border-t border-slate-100 pt-4 space-y-3">
               <div className="flex justify-between text-slate-600">
                 <span>Sous-total</span>
                 <span>{subtotal.toFixed(2)} €</span>
               </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-emerald-600 font-medium">
+                  <span>Réduction</span>
+                  <span>−{discount.toFixed(2)} €</span>
+                </div>
+              )}
               <div className="flex justify-between text-slate-600">
                 <span>Livraison</span>
                 {shippingFee === 0 ? (

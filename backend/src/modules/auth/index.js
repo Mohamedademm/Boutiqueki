@@ -1,12 +1,16 @@
 const express = require('express');
+const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const { db, createSuccessResponse, createErrorResponse } = require('../../utils');
+const { sendEmail } = require('../../utils/email');
 const validate = require('../../middleware/validate');
 const authMiddleware = require('../../middleware/auth');
 const { auditLog } = require('../../middleware/audit');
-const { RegisterSchema, LoginSchema } = require('./schema');
+const { RegisterSchema, LoginSchema, ForgotPasswordSchema, ResetPasswordSchema } = require('./schema');
+
+const sha256 = (s) => crypto.createHash('sha256').update(s).digest('hex');
 
 const router = express.Router();
 
@@ -209,6 +213,65 @@ router.post('/logout', authMiddleware, async (req, res, next) => {
     await db.query('UPDATE users SET refresh_token = NULL WHERE id = $1', [req.user.id]);
     res.clearCookie('boutiki_refresh');
     return createSuccessResponse(res, { message: 'Logged out successfully' });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/forgot-password', validate(ForgotPasswordSchema), auditLog('PASSWORD_FORGOT', '/api/auth/forgot-password'), async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const result = await db.query('SELECT id, name FROM users WHERE email = $1', [email]);
+
+    // Only send if the account exists, but ALWAYS return the same response (no account enumeration)
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      const token = crypto.randomBytes(32).toString('hex');
+      const expires = new Date(Date.now() + 60 * 60 * 1000); // 1h
+      await db.query(
+        'UPDATE users SET reset_token_hash = $1, reset_token_expires = $2 WHERE id = $3',
+        [sha256(token), expires, user.id]
+      );
+
+      const link = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${token}`;
+      await sendEmail({
+        to: email,
+        subject: 'Réinitialisation de votre mot de passe — BoutiqueKi',
+        html: `<p>Bonjour ${user.name || ''},</p>
+               <p>Vous avez demandé à réinitialiser votre mot de passe. Ce lien expire dans 1 heure :</p>
+               <p><a href="${link}">Réinitialiser mon mot de passe</a></p>
+               <p>Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>`,
+        text: `Réinitialisez votre mot de passe (valable 1h) : ${link}`,
+      });
+    }
+
+    return createSuccessResponse(res, {
+      message: 'Si un compte existe pour cet email, un lien de réinitialisation a été envoyé.',
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/reset-password', validate(ResetPasswordSchema), auditLog('PASSWORD_RESET', '/api/auth/reset-password'), async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+    const result = await db.query(
+      'SELECT id FROM users WHERE reset_token_hash = $1 AND reset_token_expires > NOW()',
+      [sha256(token)]
+    );
+    if (result.rows.length === 0) {
+      return createErrorResponse(res, { statusCode: 400, message: 'Lien invalide ou expiré.' });
+    }
+
+    const saltRounds = parseInt(process.env.BCRYPT_ROUNDS || '12', 10);
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+    await db.query(
+      'UPDATE users SET password_hash = $1, reset_token_hash = NULL, reset_token_expires = NULL, refresh_token = NULL WHERE id = $2',
+      [passwordHash, result.rows[0].id]
+    );
+
+    return createSuccessResponse(res, { message: 'Mot de passe réinitialisé. Vous pouvez vous connecter.' });
   } catch (err) {
     next(err);
   }

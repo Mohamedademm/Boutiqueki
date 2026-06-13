@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Loader2, ShoppingBag, ArrowLeft, Plus, Minus, Star, ChevronRight } from 'lucide-react';
 import useCartStore from '../store/useCartStore';
 import CartDrawer from '../components/CartDrawer';
+import { setSEO } from '../utils/seo';
 
 const api = axios.create({
   baseURL: '/api',
@@ -15,7 +16,7 @@ const PublicProductPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariants, setSelectedVariants] = useState({});
+  const [selectedVariantId, setSelectedVariantId] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({ name: '', rating: 5, comment: '' });
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
@@ -41,6 +42,23 @@ const PublicProductPage = () => {
     fetchProduct();
   }, [id]);
 
+  // Default-select the first in-stock variant once the product loads + set SEO tags
+  useEffect(() => {
+    const variants = data?.product?.variants || [];
+    if (variants.length > 0 && !selectedVariantId) {
+      const firstInStock = variants.find(v => v.stock_qty > 0) || variants[0];
+      setSelectedVariantId(firstInStock.id);
+    }
+    if (data?.product) {
+      const p = data.product;
+      setSEO({
+        title: `${p.name} — ${data.shop?.name || 'BoutiqueKi'}`,
+        description: p.description || `Achetez ${p.name} en ligne.`,
+        image: p.images?.[0],
+      });
+    }
+  }, [data, selectedVariantId]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -62,17 +80,21 @@ const PublicProductPage = () => {
   }
 
   const { product, shop } = data;
-  const { theme } = shop;
+  const theme = shop.theme || {};
 
-  const handleVariantSelect = (variantName, optionValue) => {
-    setSelectedVariants({
-      ...selectedVariants,
-      [variantName]: optionValue
-    });
-  };
+  const variants = product.variants || [];
+  const selectedVariant = variants.find(v => v.id === selectedVariantId) || null;
+  const availableStock = selectedVariant ? selectedVariant.stock_qty : product.stock ?? 0;
 
   const handleAddToCart = () => {
-    addItem(product, quantity, selectedVariants);
+    if (availableStock <= 0) return;
+    const vName = selectedVariant?.name;
+    addItem(
+      product,
+      quantity,
+      vName ? { Variante: vName } : {},
+      selectedVariant?.id || null
+    );
   };
 
   const handleReviewSubmit = async (e) => {
@@ -220,31 +242,28 @@ const PublicProductPage = () => {
               {product.description}
             </p>
 
-            {/* Variants */}
-            {product.variants && product.variants.length > 0 && (
-              <div className="space-y-6 mb-10">
-                {product.variants.map((variant, idx) => (
-                  <div key={idx}>
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">
-                      {variant.name}
-                    </h3>
-                    <div className="flex flex-wrap gap-3">
-                      {variant.options.map((opt, oIdx) => (
-                        <button
-                          key={oIdx}
-                          onClick={() => handleVariantSelect(variant.name, opt.value)}
-                          className={`px-4 py-2 border rounded-xl text-sm font-medium transition-all ${
-                            selectedVariants[variant.name] === opt.value
-                              ? 'border-slate-900 bg-slate-900 text-white'
-                              : 'border-slate-200 text-slate-700 hover:border-slate-400'
-                          }`}
-                        >
-                          {opt.value}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+            {/* Variants (flat: each variant is a selectable option) */}
+            {variants.length > 1 && (
+              <div className="mb-10">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">
+                  Variante
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {variants.map((v) => (
+                    <button
+                      key={v.id}
+                      onClick={() => setSelectedVariantId(v.id)}
+                      disabled={v.stock_qty <= 0}
+                      className={`px-4 py-2 border rounded-xl text-sm font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                        selectedVariantId === v.id
+                          ? 'border-slate-900 bg-slate-900 text-white'
+                          : 'border-slate-200 text-slate-700 hover:border-slate-400'
+                      }`}
+                    >
+                      {v.name}{v.stock_qty <= 0 ? ' (épuisé)' : ''}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -268,20 +287,20 @@ const PublicProductPage = () => {
                 </button>
               </div>
               
-              <button 
+              <button
                 onClick={handleAddToCart}
-                disabled={product.stock <= 0}
+                disabled={availableStock <= 0}
                 className="flex-1 h-14 rounded-2xl font-bold text-lg text-white shadow-lg transition-transform hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
                 style={{ backgroundColor: theme.primaryColor }}
               >
                 <ShoppingBag className="w-5 h-5" />
-                {product.stock > 0 ? 'Ajouter au panier' : 'Rupture de stock'}
+                {availableStock > 0 ? 'Ajouter au panier' : 'Rupture de stock'}
               </button>
             </div>
-            
-            {product.stock > 0 && product.stock <= 5 && (
+
+            {availableStock > 0 && availableStock <= 5 && (
               <p className="text-amber-600 text-sm font-medium mt-4">
-                Plus que {product.stock} en stock !
+                Plus que {availableStock} en stock !
               </p>
             )}
           </div>

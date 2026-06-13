@@ -161,9 +161,9 @@ const LoginPage = () => {
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
                   Mot de passe
                 </label>
-                <a href="#" className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 transition-colors">
+                <Link to="/forgot-password" className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 transition-colors">
                   Mot de passe oublié ?
-                </a>
+                </Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400" />

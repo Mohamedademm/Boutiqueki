@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Loader2, ShoppingBag } from 'lucide-react';
+import { Loader2, ShoppingBag, Search } from 'lucide-react';
 import useCartStore from '../store/useCartStore';
 import CartDrawer from '../components/CartDrawer';
 import { ensureGoogleFont } from '../utils/fonts';
+import { setSEO } from '../utils/seo';
 
 const api = axios.create({
   baseURL: '/api',
@@ -15,6 +16,8 @@ const PublicShopPage = () => {
   const [shopData, setShopData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState('newest');
   const { openCart, getCartCount } = useCartStore();
 
   useEffect(() => {
@@ -36,6 +39,14 @@ const PublicShopPage = () => {
   // Load the shop's chosen Google Font so the storefront renders with it
   useEffect(() => {
     ensureGoogleFont(shopData?.shop?.theme?.font);
+    if (shopData?.shop) {
+      const s = shopData.shop;
+      setSEO({
+        title: `${s.name} — Boutique en ligne`,
+        description: s.description || `Découvrez les produits de ${s.name} sur BoutiqueKi.`,
+        image: s.logo_url || s.banner_url,
+      });
+    }
   }, [shopData]);
 
   if (isLoading) {
@@ -70,6 +81,15 @@ const PublicShopPage = () => {
     layout: 'grid-3',
     ...(shop.theme || {}),
   };
+
+  const displayed = products
+    .filter(p => !search || (p.name || '').toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      if (sort === 'price_asc') return a.price - b.price;
+      if (sort === 'price_desc') return b.price - a.price;
+      if (sort === 'name') return (a.name || '').localeCompare(b.name || '');
+      return 0; // newest — keep server order
+    });
 
   return (
     <div 
@@ -136,9 +156,32 @@ const PublicShopPage = () => {
 
       {/* Products Section */}
       <div className="flex-1 py-16 px-6 md:px-12 max-w-7xl mx-auto w-full">
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
           <h2 className="text-3xl font-bold text-slate-800">Notre Collection</h2>
-          <span className="text-slate-500">{products.length} produits</span>
+          {products.length > 0 && (
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <div className="relative flex-1 md:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Rechercher un produit..."
+                  className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300"
+                />
+              </div>
+              <select
+                value={sort}
+                onChange={e => setSort(e.target.value)}
+                className="px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300"
+              >
+                <option value="newest">Plus récents</option>
+                <option value="price_asc">Prix croissant</option>
+                <option value="price_desc">Prix décroissant</option>
+                <option value="name">Nom (A→Z)</option>
+              </select>
+            </div>
+          )}
         </div>
 
         {products.length === 0 ? (
@@ -147,16 +190,22 @@ const PublicShopPage = () => {
             <h3 className="text-xl font-bold text-slate-700 mb-2">Bientôt disponible</h3>
             <p className="text-slate-500">Cette boutique n'a pas encore ajouté de produits.</p>
           </div>
+        ) : displayed.length === 0 ? (
+          <div className="text-center py-20 bg-slate-50 rounded-3xl border border-slate-100">
+            <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-slate-700 mb-2">Aucun résultat</h3>
+            <p className="text-slate-500">Aucun produit ne correspond à « {search} ».</p>
+          </div>
         ) : (
-          <div 
+          <div
             className={`grid gap-8 ${
-              theme.layout === 'grid-2' ? 'grid-cols-1 sm:grid-cols-2' : 
-              theme.layout === 'grid-4' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' : 
-              theme.layout === 'list' ? 'grid-cols-1' : 
+              theme.layout === 'grid-2' ? 'grid-cols-1 sm:grid-cols-2' :
+              theme.layout === 'grid-4' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' :
+              theme.layout === 'list' ? 'grid-cols-1' :
               'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
             }`}
           >
-            {products.map(product => (
+            {displayed.map(product => (
               <Link 
                 to={`/s/${slug}/p/${product.id}`} 
                 key={product.id} 
