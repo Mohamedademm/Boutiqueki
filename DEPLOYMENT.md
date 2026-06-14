@@ -1,57 +1,48 @@
-# Déploiement BoutiqueKi
+# Déploiement BoutiqueKi (Vercel)
 
-Architecture : **Frontend → Vercel** · **Backend → Railway/Render** · **DB → Neon (Postgres)**.
-(Vercel est serverless : il convient au frontend React, pas au serveur Express persistant.)
+Tout est déployé sur **Vercel** (2 projets) avec la base **Neon (Postgres)**.
 
----
+| Élément | Projet Vercel | URL |
+|---|---|---|
+| Frontend (React/Vite) | `boutiqueki` / `frontend` | https://frontend-chi-ten-7b71qfhst5.vercel.app |
+| Backend (Express, serverless) | `boutiqueki-backend` | https://boutiqueki-backend.vercel.app |
 
-## 1. Frontend (Vercel) — ✅ déjà déployé
-
-- Projet : `mohamed-adems-projects/frontend`
-- URL live : https://frontend-chi-ten-7b71qfhst5.vercel.app
-- Re-déployer manuellement : depuis `frontend/` → `vercel --prod`
-
-### Activer le déploiement automatique à chaque `git push`
-Dashboard Vercel → projet **frontend** → **Settings** :
-1. **Git** → *Connect Git Repository* → choisir `Mohamedademm/Boutiqueki`.
-2. **Build & Development → Root Directory** → mettre **`frontend`** (le repo est un monorepo).
-3. **Environment Variables** (Production) :
-   - `VITE_GOOGLE_CLIENT_ID` = `105626979178-...apps.googleusercontent.com`
-   - `VITE_API_URL` = `https://<ton-backend>.up.railway.app/api` (après l'étape 2)
-→ Désormais chaque push sur `main` redéploie automatiquement.
-
-### Rendre le site public (si 401)
-Settings → **Deployment Protection** → désactiver *Vercel Authentication* pour la Production.
+Le frontend appelle le backend via la variable **`VITE_API_URL`** = `https://boutiqueki-backend.vercel.app/api`.
+Le backend autorise le frontend via **`CLIENT_URL`** (CORS).
 
 ---
 
-## 2. Backend (Railway — recommandé)
+## Variables d'environnement (déjà configurées sur Vercel)
 
-1. https://railway.app → *New Project* → *Deploy from GitHub repo* → `Mohamedademm/Boutiqueki`.
-2. **Root Directory** = `backend`. Start command auto : `npm start`.
-3. **Variables** (onglet Variables) :
-   ```
-   DATABASE_URL=<ta chaîne Neon>
-   DATABASE_SSL=true
-   NODE_ENV=production
-   JWT_SECRET=<secret long>
-   JWT_REFRESH_SECRET=<autre secret long>
-   CLIENT_URL=https://frontend-chi-ten-7b71qfhst5.vercel.app
-   GOOGLE_CLIENT_ID=...
-   GOOGLE_CLIENT_SECRET=...
-   # optionnels : RESEND_API_KEY, STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY, STRIPE_WEBHOOK_SECRET
-   ```
-4. Après le 1er déploiement, lancer les migrations une fois : Railway → *Shell* → `npm run migrate`.
-5. Copier l'URL publique du backend → la mettre dans `VITE_API_URL` sur Vercel → redeploy frontend.
+**Backend** (`boutiqueki-backend` → Settings → Environment Variables) :
+`DATABASE_URL`, `DATABASE_SSL=true`, `NODE_ENV=production`, `JWT_SECRET`, `JWT_REFRESH_SECRET`,
+`CLIENT_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+(optionnels : `RESEND_API_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`)
 
-> **Uploads d'images** : le disque Railway est éphémère. Pour des images persistantes en prod,
-> brancher Cloudinary/S3 dans `backend/src/modules/uploads` (le contrat `{ url }` reste identique).
+**Frontend** : `VITE_API_URL`, `VITE_GOOGLE_CLIENT_ID`
 
 ---
 
-## 3. Checklist post-déploiement
-- [ ] `CLIENT_URL` (backend) = URL exacte du frontend (pour CORS + cookies cross-site).
-- [ ] `VITE_API_URL` (frontend) = URL backend + `/api`.
-- [ ] Migrations appliquées (`npm run migrate`).
-- [ ] Origine autorisée dans Google Cloud Console (OAuth) = URL du frontend.
-- [ ] (Stripe) webhook pointant vers `https://<backend>/api/payments/webhook`.
+## ⚠️ Étape à faire par toi : Google OAuth
+
+Le bouton « Se connecter avec Google » échoue tant que l'URL Vercel n'est pas autorisée.
+Dans **Google Cloud Console → APIs & Services → Identifiants → ton OAuth Client** :
+- **Origines JavaScript autorisées** → ajouter `https://frontend-chi-ten-7b71qfhst5.vercel.app`
+- **URI de redirection autorisés** → ajouter la même URL
+(La connexion classique email/mot de passe, elle, fonctionne déjà.)
+
+## ⚠️ Uploads d'images
+Vercel est serverless (système de fichiers non persistant) : les images uploadées ne sont pas
+conservées. Pour la prod, brancher **Cloudinary/S3** dans `backend/src/modules/uploads`
+(le contrat `{ url }` reste identique), ou héberger le backend sur **Render** (disque persistant).
+
+---
+
+## Re-déployer
+- Frontend : `cd frontend && vercel --prod`
+- Backend  : `cd backend && vercel --prod`
+- Déploiement auto sur `git push` : connecter le repo dans chaque projet Vercel
+  (Settings → Git) et définir **Root Directory** = `frontend` / `backend` respectivement.
+
+## Migrations
+Le schéma est déjà appliqué sur Neon. Pour de futures migrations : `cd backend && npm run migrate`.
