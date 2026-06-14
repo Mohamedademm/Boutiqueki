@@ -7,7 +7,7 @@ import CartDrawer from '../components/CartDrawer';
 import { setSEO } from '../utils/seo';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
 });
 
 const PublicProductPage = () => {

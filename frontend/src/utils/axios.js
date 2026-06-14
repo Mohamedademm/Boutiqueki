@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+// In dev, '/api' is proxied to the backend by Vite. In production, set
+// VITE_API_URL to the deployed backend origin (e.g. https://api.example.com/api).
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE,
   withCredentials: true,
 });
 
@@ -33,8 +37,8 @@ api.interceptors.response.use(
 
       try {
         // Try to refresh the token using the httpOnly cookie
-        const res = await axios.post('/api/auth/refresh', {}, {
-          withCredentials: true 
+        const res = await axios.post(`${API_BASE}/auth/refresh`, {}, {
+          withCredentials: true
         });
 
         const newToken = res.data?.data?.token || res.data?.token;

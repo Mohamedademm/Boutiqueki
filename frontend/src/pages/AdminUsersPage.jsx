@@ -3,7 +3,7 @@ import api from '../utils/axios';
 import {
   Loader2, Search, Users, ShieldCheck, Ban, Trash2,
   ChevronLeft, ChevronRight, Store, X,
-  UserCheck, UserX,
+  UserCheck, UserX, Plus,
 } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore';
 import { Navigate } from 'react-router-dom';
@@ -111,6 +111,92 @@ const UserModal = ({ user: u, onClose, onAction }) => {
   );
 };
 
+const CreateUserModal = ({ onClose, onSuccess }) => {
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'owner' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      const res = await api.post('/admin/users', formData);
+      onSuccess(res.data?.data);
+      onClose();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Erreur lors de la création de l\'utilisateur.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.94, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.94, opacity: 0 }} transition={{ duration: 0.2 }}
+        onClick={e => e.stopPropagation()}
+        className="w-full max-w-md bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-2xl"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="font-bold text-slate-900 dark:text-white text-lg">Ajouter un utilisateur</h3>
+          <button onClick={onClose} className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-700 dark:text-red-400 rounded-xl text-sm font-medium">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4 text-left">
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Nom complet</label>
+            <input type="text" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/40 focus:outline-none dark:text-white"
+              placeholder="Ex: Jean Dupont" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Email</label>
+            <input type="email" required value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })}
+              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/40 focus:outline-none dark:text-white"
+              placeholder="jean@example.com" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Mot de passe</label>
+            <input type="password" required value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })}
+              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/40 focus:outline-none dark:text-white"
+              placeholder="••••••••" minLength="6" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Rôle</label>
+            <select value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })}
+              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/40 focus:outline-none dark:text-white">
+              <option value="owner">Utilisateur (User)</option>
+              <option value="admin">Administrateur</option>
+            </select>
+          </div>
+
+          <div className="pt-2">
+            <button type="submit" disabled={isSubmitting}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-md shadow-blue-500/20">
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+              {isSubmitting ? 'Création...' : 'Créer l\'utilisateur'}
+            </button>
+          </div>
+        </form>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const AdminUsersPage = () => {
   const { user: currentUser } = useAuthStore();
   const [users, setUsers] = useState([]);
@@ -124,6 +210,7 @@ const AdminUsersPage = () => {
   const [page, setPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   // Debounce search input
   useEffect(() => {
@@ -180,6 +267,15 @@ const AdminUsersPage = () => {
   return (
     <>
       <AnimatePresence>
+        {isCreateModalOpen && (
+          <CreateUserModal
+            onClose={() => setIsCreateModalOpen(false)}
+            onSuccess={(newUser) => {
+              setUsers(prev => [newUser, ...prev].slice(0, PAGE_SIZE));
+              setTotal(t => t + 1);
+            }}
+          />
+        )}
         {selectedUser && (
           <UserModal user={selectedUser} onClose={() => setSelectedUser(null)} onAction={handleAction} />
         )}
@@ -201,6 +297,13 @@ const AdminUsersPage = () => {
             <h1 className="text-3xl font-black text-slate-900 dark:text-white">Utilisateurs</h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{total.toLocaleString('fr-FR')} utilisateurs enregistrés</p>
           </div>
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors shadow-md shadow-blue-500/20 whitespace-nowrap"
+          >
+            <Plus className="w-4 h-4" />
+            Ajouter un utilisateur
+          </button>
         </div>
 
         {/* Filters */}

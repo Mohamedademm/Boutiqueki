@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const { db, createSuccessResponse, createErrorResponse } = require('../../utils');
 const protect = require('../../middleware/auth');
 const requireRole = require('../../middleware/requireRole');
@@ -147,6 +148,55 @@ router.get('/users', protect, requireRole('admin'), async (req, res, next) => {
     return createSuccessResponse(res, {
       data: { users, total },
       meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// @route   POST /api/admin/users
+// @desc    Create a new user
+// @access  Private (Admin)
+router.post('/users', protect, requireRole('admin'), async (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    if (!name || !email || !password) {
+      return createErrorResponse(res, { statusCode: 400, message: 'Please provide name, email and password' });
+    }
+
+    const userRole = role && VALID_USER_ROLES.includes(role) ? role : 'owner';
+
+    // Check if user already exists
+    const existing = await db.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) {
+      return createErrorResponse(res, { statusCode: 400, message: 'Email already in use' });
+    }
+
+    const saltRounds = parseInt(process.env.BCRYPT_ROUNDS || '12', 10);
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    const result = await db.query(
+      `INSERT INTO users (name, email, password_hash, role)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, name, email, role, status, created_at`,
+      [name, email, passwordHash, userRole]
+    );
+
+    const u = result.rows[0];
+    return createSuccessResponse(res, {
+      statusCode: 201,
+      message: 'User created successfully',
+      data: {
+        _id: u.id,
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        status: u.status || 'active',
+        createdAt: u.created_at,
+        shopsCount: 0
+      },
     });
   } catch (err) {
     next(err);

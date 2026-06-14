@@ -4,7 +4,7 @@ import useCartStore from '../store/useCartStore';
 import { ChevronRight, CreditCard, ShoppingBag, Truck, Lock, Loader2, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
 
-const api = axios.create({ baseURL: '/api' });
+const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' });
 
 const CheckoutPage = () => {
   const navigate = useNavigate();

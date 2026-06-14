@@ -8,7 +8,7 @@ import { ensureGoogleFont } from '../utils/fonts';
 import { setSEO } from '../utils/seo';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
 });
 
 const PublicShopPage = () => {
