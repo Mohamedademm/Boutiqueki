@@ -1,5 +1,5 @@
 require('dotenv').config();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { db } = require('./src/utils'); // Now it's in ./src/utils
 
 async function createAdmin() {
