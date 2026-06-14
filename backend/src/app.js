@@ -8,10 +8,22 @@ const errorHandler = require('./middleware/error');
 
 const app = express();
 
+// Behind a hosting proxy (Railway/Render/Vercel) — needed for secure cookies & rate-limit IPs
+app.set('trust proxy', 1);
+
 // --- Middlewares Sécurité ---
 app.use(helmet());
+// Allow the configured client origin(s). CLIENT_URL may be a comma-separated list.
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map(o => o.trim())
+  .filter(Boolean);
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: (origin, cb) => {
+    // allow same-origin / curl (no origin) and any configured origin
+    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(null, false);
+  },
   credentials: true,
 }));
 app.use(rateLimit({

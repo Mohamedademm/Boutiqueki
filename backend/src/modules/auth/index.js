@@ -31,10 +31,12 @@ const generateTokens = (user) => {
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const setRefreshCookie = (res, refreshToken) => {
+  const isProd = process.env.NODE_ENV === 'production';
   res.cookie('boutiki_refresh', refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    // Cross-site (frontend on Vercel, API on Railway) requires SameSite=None + Secure.
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };
