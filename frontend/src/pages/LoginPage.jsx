@@ -5,6 +5,7 @@ import { Store, Mail, Lock, ArrowRight, Loader2, CheckCircle2, TrendingUp, Shopp
 import { motion } from 'framer-motion';
 import ThemeToggle from '../components/ThemeToggle';
 import GoogleAuthButton from '../components/GoogleAuthButton';
+import { useSettings } from '../context/SettingsContext';
 
 const perks = [
   { icon: TrendingUp, text: 'Analytics temps réel sur vos ventes' },
@@ -16,10 +17,18 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, isLoading, error, isAuthenticated, clearError } = useAuthStore();
+  const { flags } = useSettings();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated) navigate('/dashboard');
+    if (isAuthenticated) {
+      const user = useAuthStore.getState().user;
+      if (user?.role === 'client') {
+        navigate('/explore');
+      } else {
+        navigate('/dashboard');
+      }
+    }
     return () => clearError();
   }, [isAuthenticated, navigate, clearError]);
 
@@ -205,15 +214,19 @@ const LoginPage = () => {
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
-            <span className="text-xs font-medium text-slate-400 dark:text-slate-600">ou</span>
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
-          </div>
+          {flags.googleLogin && (
+            <>
+              {/* Divider */}
+              <div className="flex items-center gap-3 my-6">
+                <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+                <span className="text-xs font-medium text-slate-400 dark:text-slate-600">ou</span>
+                <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+              </div>
 
-          {/* Google sign-in */}
-          <GoogleAuthButton redirectTo="/dashboard" text="signin_with" />
+              {/* Google sign-in */}
+              <GoogleAuthButton redirectTo="/dashboard" text="signin_with" />
+            </>
+          )}
 
           <p className="mt-8 text-center text-sm text-slate-500 dark:text-slate-500">
             Pas encore de compte ?{' '}

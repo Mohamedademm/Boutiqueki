@@ -1,15 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Loader2, ShoppingBag, Search } from 'lucide-react';
+import { Loader2, ShoppingBag, Search, Store, ChevronRight, MapPin, Package } from 'lucide-react';
+import { motion } from 'framer-motion';
 import useCartStore from '../store/useCartStore';
-import CartDrawer from '../components/CartDrawer';
 import { ensureGoogleFont } from '../utils/fonts';
 import { setSEO } from '../utils/seo';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
 });
+
+const SkeletonProductCard = () => (
+  <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden animate-pulse">
+    <div className="aspect-square bg-slate-200" />
+    <div className="p-4 space-y-2">
+      <div className="h-3 bg-slate-200 rounded w-1/3" />
+      <div className="h-4 bg-slate-200 rounded w-2/3" />
+      <div className="h-5 bg-slate-200 rounded w-1/4 mt-2" />
+    </div>
+  </div>
+);
 
 const PublicShopPage = () => {
   const { slug } = useParams();
@@ -18,7 +29,7 @@ const PublicShopPage = () => {
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('newest');
-  const { openCart, getCartCount } = useCartStore();
+  const { addItem } = useCartStore();
 
   useEffect(() => {
     const fetchShop = async () => {
@@ -36,14 +47,13 @@ const PublicShopPage = () => {
     fetchShop();
   }, [slug]);
 
-  // Load the shop's chosen Google Font so the storefront renders with it
   useEffect(() => {
     ensureGoogleFont(shopData?.shop?.theme?.font);
     if (shopData?.shop) {
       const s = shopData.shop;
       setSEO({
         title: `${s.name} — Boutique en ligne`,
-        description: s.description || `Découvrez les produits de ${s.name} sur BoutiqueKi.`,
+        description: s.description || `Decouvrez les produits de ${s.name} sur BoutiqueKi.`,
         image: s.logo_url || s.banner_url,
       });
     }
@@ -51,22 +61,38 @@ const PublicShopPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Skeleton hero */}
+        <div className="animate-pulse py-4 flex items-center gap-2 mb-4">
+          <div className="h-4 bg-slate-200 rounded w-16" />
+          <div className="h-4 bg-slate-200 rounded w-4" />
+          <div className="h-4 bg-slate-200 rounded w-20" />
+        </div>
+        <div className="h-48 md:h-64 bg-slate-200 rounded-3xl mb-8" />
+        <div className="flex items-end gap-5 mb-10 -mt-12 relative z-10 px-2">
+          <div className="w-24 h-24 rounded-2xl bg-slate-300 border-4 border-white" />
+          <div className="space-y-2 pb-1">
+            <div className="h-7 bg-slate-200 rounded w-48" />
+            <div className="h-4 bg-slate-100 rounded w-72" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-10">
+          {Array.from({ length: 6 }).map((_, i) => <SkeletonProductCard key={i} />)}
+        </div>
       </div>
     );
   }
 
   if (error || !shopData) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-center px-4">
-        <div className="w-20 h-20 bg-slate-200 rounded-full flex items-center justify-center mb-6">
+      <div className="flex flex-col items-center justify-center py-32 text-center px-4">
+        <div className="w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center mb-6">
           <ShoppingBag className="w-10 h-10 text-slate-400" />
         </div>
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">Oops !</h1>
-        <p className="text-slate-600 mb-8">{error}</p>
-        <Link to="/" className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors">
-          Retour à BoutiqueKi
+        <h1 className="text-3xl font-black text-slate-800 mb-2">Oops !</h1>
+        <p className="text-slate-500 mb-8 max-w-sm">{error}</p>
+        <Link to="/explore" className="px-6 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors">
+          Retour a l'exploration
         </Link>
       </div>
     );
@@ -88,189 +114,211 @@ const PublicShopPage = () => {
       if (sort === 'price_asc') return a.price - b.price;
       if (sort === 'price_desc') return b.price - a.price;
       if (sort === 'name') return (a.name || '').localeCompare(b.name || '');
-      return 0; // newest — keep server order
+      return 0;
     });
 
   return (
-    <div 
-      className="min-h-screen flex flex-col"
-      style={{ fontFamily: theme.font || 'Inter', backgroundColor: theme.template === 'Minimal' ? '#f8fafc' : '#ffffff' }}
-    >
-      {/* Header */}
-      <header 
-        className="py-6 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50 transition-colors"
-        style={{ 
-          backgroundColor: theme.template === 'Bold' ? theme.primaryColor : 'rgba(255, 255, 255, 0.9)',
-          backdropFilter: theme.template !== 'Bold' ? 'blur(10px)' : 'none',
-          borderBottom: theme.template !== 'Bold' ? '1px solid #f1f5f9' : 'none'
-        }}
-      >
-        <Link 
-          to={`/s/${slug}`} 
-          className={`text-2xl font-black ${theme.template === 'Bold' ? 'text-white' : ''}`}
-          style={{ color: theme.template !== 'Bold' ? theme.primaryColor : '' }}
-        >
-          {shop.name}
-        </Link>
-        <div className="flex items-center gap-6">
-          <button 
-            onClick={openCart}
-            className={`relative p-2 rounded-full ${theme.template === 'Bold' ? 'text-white hover:bg-white/10' : 'text-slate-600 hover:bg-slate-100'}`}
-          >
-            <ShoppingBag className="w-6 h-6" />
-            {getCartCount() > 0 && (
-              <span className="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
-                {getCartCount()}
-              </span>
-            )}
-          </button>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <div 
-        className="py-24 px-6 md:px-12 text-center relative overflow-hidden"
-        style={{ 
-          backgroundColor: theme.template === 'Luxe' ? '#0f172a' : theme.primaryColor + '08' 
-        }}
-      >
-        <div className="relative z-10 max-w-3xl mx-auto">
-          <h1 
-            className="text-5xl md:text-6xl font-black mb-6 leading-tight"
-            style={{ 
-              color: theme.template === 'Luxe' ? '#f8fafc' : theme.primaryColor
-            }}
-          >
-            {shop.name}
-          </h1>
-          <p 
-            className="text-lg md:text-xl mb-10"
-            style={{ 
-              color: theme.template === 'Luxe' ? '#cbd5e1' : '#64748b'
-            }}
-          >
-            {shop.description || "Découvrez notre collection exclusive de produits."}
-          </p>
-        </div>
+    <div style={{ fontFamily: theme.font || 'Inter' }}>
+      {/* Breadcrumb */}
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center text-sm text-slate-500">
+        <Link to="/explore" className="hover:text-slate-800 transition-colors">Explorer</Link>
+        <ChevronRight className="w-4 h-4 mx-2" />
+        <Link to="/boutiques" className="hover:text-slate-800 transition-colors">Boutiques</Link>
+        <ChevronRight className="w-4 h-4 mx-2" />
+        <span className="text-slate-800 font-medium">{shop.name}</span>
       </div>
 
+      {/* Shop Hero */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="relative overflow-hidden"
+      >
+        {/* Banner */}
+        <div className="h-48 md:h-64 bg-gradient-to-r from-slate-100 to-slate-200 relative mx-6 rounded-3xl overflow-hidden">
+          {shop.banner_url ? (
+            <img src={shop.banner_url} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-slate-700 to-blue-900">
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:30px_30px]" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        </div>
+
+        {/* Shop info */}
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="relative -mt-14 flex flex-col sm:flex-row items-start sm:items-end gap-5 mb-8"
+          >
+            <div className="w-28 h-28 rounded-2xl bg-white shadow-xl border-4 border-white flex items-center justify-center overflow-hidden flex-shrink-0">
+              {shop.logo_url ? (
+                <img src={shop.logo_url} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                  <Store className="w-10 h-10 text-white" />
+                </div>
+              )}
+            </div>
+            <div className="pb-2 flex-1">
+              <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-1">{shop.name}</h1>
+              {shop.description && (
+                <p className="text-slate-500 max-w-xl mb-3">{shop.description}</p>
+              )}
+              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <Package className="w-4 h-4 text-blue-500" />
+                  <span className="font-semibold text-slate-700">{products.length}</span> produit{products.length !== 1 ? 's' : ''}
+                </span>
+                {shop.city && (
+                  <span className="flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4 text-blue-500" />
+                    {shop.city}
+                  </span>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
+
       {/* Products Section */}
-      <div className="flex-1 py-16 px-6 md:px-12 max-w-7xl mx-auto w-full">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
-          <h2 className="text-3xl font-bold text-slate-800">Notre Collection</h2>
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8"
+        >
+          <h2 className="text-xl font-bold text-slate-800">
+            Catalogue
+          </h2>
           {products.length > 0 && (
             <div className="flex items-center gap-3 w-full md:w-auto">
               <div className="relative flex-1 md:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="text"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Rechercher un produit..."
-                  className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               <select
                 value={sort}
                 onChange={e => setSort(e.target.value)}
-                className="px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300"
+                className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="newest">Plus récents</option>
+                <option value="newest">Plus recents</option>
                 <option value="price_asc">Prix croissant</option>
-                <option value="price_desc">Prix décroissant</option>
+                <option value="price_desc">Prix decroissant</option>
                 <option value="name">Nom (A→Z)</option>
               </select>
             </div>
           )}
-        </div>
+        </motion.div>
 
         {products.length === 0 ? (
-          <div className="text-center py-20 bg-slate-50 rounded-3xl border border-slate-100">
-            <ShoppingBag className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-slate-700 mb-2">Bientôt disponible</h3>
-            <p className="text-slate-500">Cette boutique n'a pas encore ajouté de produits.</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-20 bg-white rounded-3xl border border-slate-100"
+          >
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <ShoppingBag className="w-10 h-10 text-blue-300" />
+            </div>
+            <h3 className="text-xl font-black text-slate-800 mb-2">Bientot disponible</h3>
+            <p className="text-slate-500 mb-6 max-w-sm mx-auto">Cette boutique n'a pas encore ajoute de produits.</p>
+            <Link to="/explore" className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-colors">
+              Explorer d'autres boutiques
+            </Link>
+          </motion.div>
         ) : displayed.length === 0 ? (
-          <div className="text-center py-20 bg-slate-50 rounded-3xl border border-slate-100">
-            <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-slate-700 mb-2">Aucun résultat</h3>
-            <p className="text-slate-500">Aucun produit ne correspond à « {search} ».</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-20 bg-white rounded-3xl border border-slate-100"
+          >
+            <div className="w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Search className="w-10 h-10 text-slate-300" />
+            </div>
+            <h3 className="text-xl font-black text-slate-800 mb-2">Aucun resultat</h3>
+            <p className="text-slate-500">Aucun produit ne correspond a « {search} ».</p>
+          </motion.div>
         ) : (
           <div
-            className={`grid gap-8 ${
+            className={`grid gap-6 ${
               theme.layout === 'grid-2' ? 'grid-cols-1 sm:grid-cols-2' :
-              theme.layout === 'grid-4' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' :
+              theme.layout === 'grid-4' ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4' :
               theme.layout === 'list' ? 'grid-cols-1' :
-              'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+              'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3'
             }`}
           >
-            {displayed.map(product => (
-              <Link 
-                to={`/s/${slug}/p/${product.id}`} 
-                key={product.id} 
-                className={`group flex ${theme.layout === 'list' ? 'flex-row gap-6 items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md' : 'flex-col'}`}
+            {displayed.map((product, i) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04 }}
               >
-                <div 
-                  className={`bg-slate-100 rounded-2xl overflow-hidden relative ${
-                    theme.layout === 'list' ? 'w-48 h-48 flex-shrink-0' : 'aspect-square mb-4'
-                  }`}
+                <Link
+                  to={`/s/${slug}/p/${product.id}`}
+                  className={`group flex ${theme.layout === 'list' ? 'flex-row gap-6 items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md' : 'flex-col bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300'}`}
                 >
-                  {product.images && product.images[0] ? (
-                    <img 
-                      src={product.images[0]} 
-                      alt={product.name} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-slate-400">
-                      <ShoppingBag className="w-12 h-12 opacity-20" />
-                    </div>
-                  )}
-                  {product.comparePrice > product.price && (
-                    <div 
-                      className="absolute top-4 left-4 text-white text-xs font-bold px-3 py-1 rounded-full"
-                      style={{ backgroundColor: theme.secondaryColor }}
-                    >
-                      Promo
-                    </div>
-                  )}
-                </div>
-                <div className={theme.layout === 'list' ? 'flex-1' : ''}>
-                  <div className="text-sm text-slate-500 mb-1">{product.category}</div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">
-                    {product.name}
-                  </h3>
-                  <div className="flex items-center gap-3">
-                    <span 
-                      className="font-bold text-xl"
-                      style={{ color: theme.primaryColor }}
-                    >
-                      {product.price.toFixed(2)} €
-                    </span>
+                  <div
+                    className={`bg-slate-100 overflow-hidden relative ${
+                      theme.layout === 'list' ? 'w-48 h-48 flex-shrink-0 rounded-xl' : 'aspect-square'
+                    }`}
+                  >
+                    {product.images && product.images[0] ? (
+                      <img
+                        src={product.images[0]}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-slate-400">
+                        <ShoppingBag className="w-12 h-12 opacity-20" />
+                      </div>
+                    )}
                     {product.comparePrice > product.price && (
-                      <span className="text-slate-400 line-through text-sm">
-                        {product.comparePrice.toFixed(2)} €
-                      </span>
+                      <div
+                        className="absolute top-3 left-3 text-white text-xs font-bold px-2.5 py-1 rounded-full"
+                        style={{ backgroundColor: theme.secondaryColor }}
+                      >
+                        -{Math.round(((product.comparePrice - product.price) / product.comparePrice) * 100)}%
+                      </div>
                     )}
                   </div>
-                </div>
-              </Link>
+                  <div className={theme.layout === 'list' ? 'flex-1' : 'p-4'}>
+                    {product.category && (
+                      <div className="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">{product.category}</div>
+                    )}
+                    <h3 className="text-sm font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
+                      {product.name}
+                    </h3>
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-black text-lg" style={{ color: theme.primaryColor }}>
+                        {product.price.toFixed(2)} €
+                      </span>
+                      {product.comparePrice > product.price && (
+                        <span className="text-slate-400 line-through text-sm">
+                          {product.comparePrice.toFixed(2)} €
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </div>
         )}
       </div>
-
-      {/* Footer */}
-      <footer className="py-12 px-6 text-center border-t border-slate-200 mt-auto">
-        <p className="text-slate-500 mb-4">&copy; {new Date().getFullYear()} {shop.name}. Tous droits réservés.</p>
-        <p className="text-xs text-slate-400 flex items-center justify-center gap-1">
-          Propulsé par <Link to="/" className="font-bold text-blue-600 hover:underline">BoutiqueKi</Link>
-        </p>
-      </footer>
-      
-      {/* Cart Drawer */}
-      <CartDrawer theme={theme} />
     </div>
   );
 };

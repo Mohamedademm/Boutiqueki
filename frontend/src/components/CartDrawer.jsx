@@ -2,7 +2,7 @@ import { X, Plus, Minus, ShoppingBag, ArrowRight, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import useCartStore from '../store/useCartStore';
 
-const CartDrawer = ({ theme }) => {
+const CartDrawer = ({ theme = {} }) => {
   const navigate = useNavigate();
   const { 
     items, 

@@ -35,7 +35,7 @@ const CheckoutPage = () => {
   // Redirect if cart is empty
   useEffect(() => {
     if (items.length === 0 && !orderComplete) {
-      navigate('/');
+      navigate('/explore');
     }
   }, [items, navigate, orderComplete]);
 
@@ -112,30 +112,36 @@ const CheckoutPage = () => {
 
   if (orderComplete) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-xl text-center">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10 text-green-600" />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex flex-col items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-2xl shadow-slate-200/50 text-center border border-slate-100">
+          <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30">
+            <CheckCircle2 className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">Merci pour votre commande !</h1>
+          <h1 className="text-3xl font-black text-slate-900 mb-2">Merci pour votre commande !</h1>
           <p className="text-slate-500 mb-6">
-            Votre commande numéro <strong className="text-slate-800">#{orderData?.id?.substring(0, 8).toUpperCase()}</strong> a bien été enregistrée. Un email de confirmation vous sera envoyé à {formData.email}.
+            Votre commande <strong className="text-slate-800">#{orderData?.id?.substring(0, 8).toUpperCase()}</strong> a bien ete enregistree. Un email de confirmation sera envoye a <strong className="text-slate-700">{formData.email}</strong>.
           </p>
-          <div className="bg-slate-50 p-4 rounded-xl mb-8 text-left">
-            <div className="flex justify-between mb-2">
-              <span className="text-slate-500">Total payé</span>
-              <span className="font-bold text-slate-800">{orderData?.total.toFixed(2)} €</span>
-            </div>
+          <div className="bg-slate-50 p-5 rounded-2xl mb-8 text-left space-y-3">
             <div className="flex justify-between">
-              <span className="text-slate-500">Méthode</span>
-              <span className="font-bold text-slate-800">
-                {formData.paymentMethod === 'cash_on_delivery' ? 'Paiement à la livraison' : 'Carte bancaire'}
+              <span className="text-slate-500 text-sm">Total paye</span>
+              <span className="font-black text-slate-900 text-lg">{orderData?.total.toFixed(2)} €</span>
+            </div>
+            <div className="border-t border-slate-200" />
+            <div className="flex justify-between">
+              <span className="text-slate-500 text-sm">Methode</span>
+              <span className="font-semibold text-slate-800 text-sm">
+                {formData.paymentMethod === 'cash_on_delivery' ? 'Paiement a la livraison' : 'Carte bancaire'}
               </span>
             </div>
           </div>
-          <Link to="/" className="inline-block w-full py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors">
-            Retour à l'accueil
-          </Link>
+          <div className="flex flex-col gap-3">
+            <Link to="/client/orders" className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/20 text-center text-sm">
+              Voir mes commandes
+            </Link>
+            <Link to="/explore" className="w-full py-3 border border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-colors text-center text-sm">
+              Continuer mes achats
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -147,7 +153,7 @@ const CheckoutPage = () => {
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="bg-white border-b border-slate-200 py-4 px-6 md:px-12 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-black text-slate-800">BoutiqueKi</Link>
+        <Link to="/explore" className="text-2xl font-black text-slate-800">BoutiqueKi</Link>
         <div className="flex items-center text-sm font-medium text-slate-500">
           <span className={step >= 1 ? 'text-blue-600' : ''}>Livraison</span>
           <ChevronRight className="w-4 h-4 mx-2" />

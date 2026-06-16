@@ -4,6 +4,30 @@ const bcrypt = require('bcryptjs');
 const { db, createSuccessResponse, createErrorResponse } = require('../../utils');
 const protect = require('../../middleware/auth');
 const requireRole = require('../../middleware/requireRole');
+const { getSettings, updateSettings } = require('../settings/service');
+const { runMigrations } = require('../../lib/migrate');
+
+// --- Run pending DB migrations (admin only; useful when local DB access is blocked) ---
+router.post('/migrate', protect, requireRole('admin'), async (req, res, next) => {
+  try {
+    const applied = await runMigrations();
+    return createSuccessResponse(res, { message: applied.length ? 'Migrations appliquées' : 'Base à jour', data: { applied } });
+  } catch (err) { next(err); }
+});
+
+// --- Platform settings (admin edits the whole site) ---
+router.get('/settings', protect, requireRole('admin'), async (req, res, next) => {
+  try {
+    return createSuccessResponse(res, { data: await getSettings() });
+  } catch (err) { next(err); }
+});
+
+router.put('/settings', protect, requireRole('admin'), async (req, res, next) => {
+  try {
+    const updated = await updateSettings(req.body || {});
+    return createSuccessResponse(res, { message: 'Réglages mis à jour', data: updated });
+  } catch (err) { next(err); }
+});
 
 const VALID_USER_ROLES = ['admin', 'owner', 'client'];
 const VALID_USER_STATUSES = ['active', 'banned'];

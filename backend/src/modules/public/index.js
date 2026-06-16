@@ -1,8 +1,21 @@
 const express = require('express');
 const { db, createSuccessResponse, createErrorResponse } = require('../../utils');
 const { validateCoupon } = require('../coupons/validate');
+const { getSettings } = require('../settings/service');
 
 const router = express.Router();
+
+// GET /api/public/settings — branding, content & flags applied across the whole site.
+router.get('/settings', async (req, res, next) => {
+  try {
+    const s = await getSettings();
+    return createSuccessResponse(res, {
+      data: { branding: s.branding, content: s.content, flags: s.flags, commerce: s.commerce },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 // POST /api/public/coupons/validate { shopId, code, subtotal } — preview a coupon at checkout.
 router.post('/coupons/validate', async (req, res, next) => {
@@ -12,6 +25,159 @@ router.post('/coupons/validate', async (req, res, next) => {
     const result = await validateCoupon(db, shopId, code, Number(subtotal) || 0);
     if (!result.ok) return createErrorResponse(res, { statusCode: 400, message: result.message });
     return createSuccessResponse(res, { data: { discount: result.discount, coupon: result.coupon } });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/public/shops — browse all active shops (paginated, searchable)
+router.get('/shops', async (req, res, next) => {
+  try {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 12));
+    const offset = (page - 1) * limit;
+    const search = req.query.search || '';
+    const sort = req.query.sort || 'newest';
+
+    const searchFilter = search ? `AND s.name ILIKE '%' || $1 || '%'` : '';
+    const params = search ? [search] : [];
+
+    let orderBy = 's.created_at DESC';
+    if (sort === 'name') orderBy = 's.name ASC';
+    if (sort === 'products') orderBy = 'product_count DESC';
+
+    const countQ = await db.query(
+      `SELECT COUNT(*) FROM shops s WHERE s.status = 'active' ${searchFilter}`,
+      params
+    );
+    const total = parseInt(countQ.rows[0].count);
+
+    const dataQ = await db.query(
+      `SELECT s.id, s.name, s.slug, s.description, s.logo_url, s.banner_url, s.theme, s.created_at,
+              (SELECT COUNT(*) FROM products WHERE shop_id = s.id AND status = 'active') AS product_count
+       FROM shops s
+       WHERE s.status = 'active' ${searchFilter}
+       ORDER BY ${orderBy}
+       LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
+      [...params, limit, offset]
+    );
+
+    const shops = dataQ.rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      slug: row.slug,
+      description: row.description,
+      logoUrl: row.logo_url,
+      bannerUrl: row.banner_url,
+      theme: row.theme || {},
+      productCount: parseInt(row.product_count),
+      createdAt: row.created_at,
+    }));
+
+    return createSuccessResponse(res, {
+      data: shops,
+      meta: { total, page, limit },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/public/products — browse all products across all shops (paginated, filterable)
+router.get('/products', async (req, res, next) => {
+  try {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+    const search = req.query.search || '';
+    const category = req.query.category || '';
+    const minPrice = parseFloat(req.query.minPrice) || null;
+    const maxPrice = parseFloat(req.query.maxPrice) || null;
+    const sort = req.query.sort || 'newest';
+
+    const conditions = ["p.status = 'active'", "s.status = 'active'"];
+    const params = [];
+
+    if (search) {
+      params.push(search);
+      conditions.push(`p.name ILIKE '%' || $${params.length} || '%'`);
+    }
+    if (category) {
+      params.push(category);
+      conditions.push(`c.name = $${params.length}`);
+    }
+    if (minPrice !== null) {
+      params.push(minPrice);
+      conditions.push(`p.price >= $${params.length}`);
+    }
+    if (maxPrice !== null) {
+      params.push(maxPrice);
+      conditions.push(`p.price <= $${params.length}`);
+    }
+
+    const where = conditions.join(' AND ');
+
+    let orderBy = 'p.created_at DESC';
+    if (sort === 'price_asc') orderBy = 'p.price ASC';
+    if (sort === 'price_desc') orderBy = 'p.price DESC';
+    if (sort === 'name') orderBy = 'p.name ASC';
+
+    const countQ = await db.query(
+      `SELECT COUNT(*) FROM products p
+       LEFT JOIN categories c ON p.category_id = c.id
+       JOIN shops s ON s.id = p.shop_id
+       WHERE ${where}`,
+      params
+    );
+    const total = parseInt(countQ.rows[0].count);
+
+    const dataQ = await db.query(
+      `SELECT p.id, p.name, p.description, p.price, p.compare_price, p.images, p.status,
+              c.name AS category,
+              s.id AS shop_id, s.name AS shop_name, s.slug AS shop_slug, s.logo_url AS shop_logo
+       FROM products p
+       LEFT JOIN categories c ON p.category_id = c.id
+       JOIN shops s ON s.id = p.shop_id
+       WHERE ${where}
+       ORDER BY ${orderBy}
+       LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
+      [...params, limit, offset]
+    );
+
+    const products = dataQ.rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      price: row.price != null ? Number(row.price) : 0,
+      comparePrice: row.compare_price != null ? Number(row.compare_price) : 0,
+      images: Array.isArray(row.images) ? row.images : [],
+      category: row.category || null,
+      shopId: row.shop_id,
+      shopName: row.shop_name,
+      shopSlug: row.shop_slug,
+      shopLogo: row.shop_logo,
+    }));
+
+    return createSuccessResponse(res, {
+      data: products,
+      meta: { total, page, limit },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/public/categories — distinct category names across all active shops
+router.get('/categories', async (req, res, next) => {
+  try {
+    const r = await db.query(
+      `SELECT DISTINCT c.name
+       FROM categories c
+       JOIN products p ON p.category_id = c.id AND p.status = 'active'
+       JOIN shops s ON s.id = p.shop_id AND s.status = 'active'
+       ORDER BY c.name`
+    );
+    return createSuccessResponse(res, { data: r.rows.map(row => row.name) });
   } catch (err) {
     next(err);
   }

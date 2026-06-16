@@ -147,9 +147,10 @@ const LandingPage = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
-            <a href="#features" className="hover:text-white transition-colors">Fonctionnalités</a>
+            <Link to="/explore" className="hover:text-white transition-colors">Parcourir les boutiques</Link>
+            <a href="#features" className="hover:text-white transition-colors">Fonctionnalites</a>
             <a href="#pricing" className="hover:text-white transition-colors">Tarifs</a>
-            <a href="#testimonials" className="hover:text-white transition-colors">Témoignages</a>
+            <a href="#testimonials" className="hover:text-white transition-colors">Temoignages</a>
           </div>
 
           <div className="flex items-center gap-2">

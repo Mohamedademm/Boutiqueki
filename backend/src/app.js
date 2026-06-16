@@ -28,7 +28,7 @@ app.use(cors({
 }));
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
+  max: 1000,
   message: { success: false, message: 'Too many requests' },
 }));
 
@@ -39,6 +39,24 @@ app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), req
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// --- Maintenance guard: when enabled, only admin + auth/health/settings pass through ---
+const { getSettings } = require('./modules/settings/service');
+app.use(async (req, res, next) => {
+  try {
+    const path = req.path;
+    const allowed = path.startsWith('/api/auth') || path.startsWith('/api/admin')
+      || path === '/api/public/settings' || path === '/api/health';
+    if (allowed) return next();
+    const s = await getSettings();
+    if (s.flags?.maintenance) {
+      return res.status(503).json({ success: false, message: 'Site en maintenance', maintenance: true });
+    }
+    next();
+  } catch {
+    next(); // never block the API if settings can't be read
+  }
+});
 
 // --- Routes ---
 app.use('/api/auth',       require('./modules/auth'));
@@ -54,6 +72,9 @@ app.use('/api/public',     require('./modules/public'));      // /api/public/* (
 app.use('/api/checkout',   require('./modules/checkout'));    // /api/checkout (order creation)
 app.use('/api/uploads',    require('./modules/uploads'));     // /api/uploads (image upload)
 app.use('/api/payments',   require('./modules/payments'));    // /api/payments (Stripe, config-gated)
+app.use('/api/claims',     require('./modules/claims'));      // /api/claims (réclamations client)
+app.use('/api/orders',     require('./modules/client'));      // /api/orders/my (commandes client)
+app.use('/api/wishlist',   require('./modules/wishlist'));    // /api/wishlist (favoris client)
 
 // --- Static: user-uploaded images ---
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
@@ -72,6 +93,9 @@ app.get('/sitemap.xml', async (req, res, next) => {
     );
     const urls = [
       `${base}/`,
+      `${base}/explore`,
+      `${base}/boutiques`,
+      `${base}/explore/products`,
       ...shops.rows.map(s => `${base}/s/${s.slug}`),
       ...products.rows.map(p => `${base}/s/${p.slug}/p/${p.id}`),
     ];

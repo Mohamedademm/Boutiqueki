@@ -1,0 +1,12 @@
+/* Design tokens — runtime-overridable by the admin via SettingsContext (CSS variables).
+   Components built in the design-system phase consume these (e.g. bg-[var(--bk-primary)]). */
+:root {
+  --bk-primary: #2563eb;
+  --bk-primary-hover: #1d4ed8;
+  --bk-secondary: #06b6d4;
+  --bk-radius: 0.75rem;
+  --bk-radius-lg: 1rem;
+  --bk-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --bk-shadow-lg: 0 10px 30px -10px rgba(0, 0, 0, 0.25);
+  --bk-font: 'Inter', system-ui, sans-serif;
+}

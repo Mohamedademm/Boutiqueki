@@ -1,4 +1,5 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const { db, createSuccessResponse, createErrorResponse } = require('../../utils');
 const { sendEmail } = require('../../utils/email');
 const { validateCoupon } = require('../coupons/validate');
@@ -10,12 +11,28 @@ const router = express.Router();
 const SHIPPING_THRESHOLD = 50;
 const SHIPPING_FEE = 5;
 
+// Helper: optionally extract user_id from Bearer token (no error if absent)
+const extractUserId = (req) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded?.id || null;
+  } catch {
+    return null;
+  }
+};
+
 // POST /api/checkout — create an order from a public cart (no auth: customers).
 // Totals are recomputed server-side; stock is decremented atomically.
 router.post('/', validate(CheckoutSchema), async (req, res, next) => {
   const client = await db.getClient();
   try {
     const { shopId, customerInfo, shippingAddress, items, paymentMethod, couponCode } = req.body;
+
+    // Try to get the authenticated user_id (optional - works for anonymous too)
+    const userId = extractUserId(req);
 
     await client.query('BEGIN');
 
@@ -108,10 +125,10 @@ router.post('/', validate(CheckoutSchema), async (req, res, next) => {
     const payment = { method: paymentMethod, status: 'pending', couponCode: appliedCoupon, discount };
 
     const orderRes = await client.query(
-      `INSERT INTO orders (shop_id, customer, payment, status, total)
-       VALUES ($1, $2, $3, 'pending', $4)
+      `INSERT INTO orders (shop_id, customer, payment, status, total, user_id)
+       VALUES ($1, $2, $3, 'pending', $4, $5)
        RETURNING id, status, total, created_at AS "createdAt"`,
-      [shopId, JSON.stringify(customer), JSON.stringify(payment), total]
+      [shopId, JSON.stringify(customer), JSON.stringify(payment), total, userId || null]
     );
     const order = orderRes.rows[0];
 

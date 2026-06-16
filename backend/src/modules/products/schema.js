@@ -4,7 +4,7 @@ const VariantSchema = z.object({
   id: z.string().uuid().optional(), // Pour l'update
   name: z.string().min(1, 'Variant name required'),
   sku: z.string().optional(),
-  price: z.number().positive().optional().nullable(),
+  price: z.number().nonnegative().optional().nullable(),
   stock_qty: z.number().int().min(0).default(0),
   alert_threshold: z.number().int().min(0).default(5),
 });

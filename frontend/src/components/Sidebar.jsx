@@ -4,7 +4,7 @@ import useAuthStore from '../store/useAuthStore';
 import {
   LayoutDashboard, Package, Settings, LogOut, Store,
   ShoppingBag, Warehouse, MonitorPlay, ShieldAlert,
-  ChevronLeft, ChevronRight, Users, Building2, ChevronDown, ChevronUp, BarChart3,
+  ChevronLeft, ChevronRight, Users, Building2, ChevronDown, ChevronUp, BarChart3, SlidersHorizontal,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -22,19 +22,25 @@ const adminItems = [
   { name: 'Vue globale', href: '/dashboard/admin', icon: ShieldAlert },
   { name: 'Utilisateurs', href: '/dashboard/admin/users', icon: Users },
   { name: 'Boutiques', href: '/dashboard/admin/shops', icon: Building2 },
+  { name: 'Réglages du site', href: '/dashboard/admin/settings', icon: SlidersHorizontal },
 ];
 
 const NavLink = ({ item, collapsed, isActive }) => (
   <Link
     to={item.href}
     title={collapsed ? item.name : undefined}
+    style={isActive ? {
+      backgroundColor: 'color-mix(in srgb, var(--bk-primary) 14%, transparent)',
+      color: 'var(--bk-primary)',
+      borderColor: 'color-mix(in srgb, var(--bk-primary) 25%, transparent)',
+    } : undefined}
     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 relative group ${
       isActive
-        ? 'bg-blue-600/15 dark:bg-blue-500/15 text-blue-700 dark:text-blue-400 border border-blue-500/20'
+        ? 'border'
         : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white'
     } ${collapsed ? 'justify-center' : ''}`}
   >
-    <item.icon className={`flex-shrink-0 w-4.5 h-4.5 transition-colors ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'}`} />
+    <item.icon className={`flex-shrink-0 w-4.5 h-4.5 transition-colors ${isActive ? '' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'}`} style={isActive ? { color: 'var(--bk-primary)' } : undefined} />
     <AnimatePresence>
       {!collapsed && (
         <motion.span
@@ -50,7 +56,8 @@ const NavLink = ({ item, collapsed, isActive }) => (
     {isActive && (
       <motion.div
         layoutId="active-pill"
-        className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-blue-500 rounded-r-full"
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full"
+        style={{ backgroundColor: 'var(--bk-primary)' }}
       />
     )}
   </Link>
@@ -86,7 +93,8 @@ const Sidebar = () => {
         {/* Logo */}
         <div className={`flex items-center mb-7 px-1 ${collapsed ? 'justify-center' : 'justify-between'}`}>
           <Link to="/dashboard" className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md shadow-blue-500/25">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md shadow-blue-500/25"
+              style={{ background: 'linear-gradient(135deg, var(--bk-primary), var(--bk-secondary))' }}>
               <Store className="w-4 h-4 text-white" />
             </div>
             <AnimatePresence>
