@@ -15,6 +15,45 @@ const statusConfig = {
   cancelled:  { label: 'Annulee',      color: 'text-red-700 bg-red-50 border-red-200',          dot: 'bg-red-400',     icon: XCircle },
 };
 
+const TIMELINE_STEPS = [
+  { key: 'pending', label: 'Confirmée', icon: Clock },
+  { key: 'processing', label: 'Préparation', icon: Package },
+  { key: 'shipped', label: 'Expédiée', icon: TrendingUp },
+  { key: 'delivered', label: 'Livrée', icon: CheckCircle2 },
+];
+
+const OrderTimeline = ({ status }) => {
+  if (status === 'cancelled') {
+    return (
+      <div className="flex items-center gap-2 text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3 text-sm font-semibold">
+        <XCircle className="w-4 h-4" /> Commande annulée
+      </div>
+    );
+  }
+  const idx = Math.max(0, TIMELINE_STEPS.findIndex(s => s.key === status));
+  return (
+    <div className="flex items-start justify-between pt-1 pb-2">
+      {TIMELINE_STEPS.map((step, i) => {
+        const done = i <= idx;
+        const Icon = step.icon;
+        return (
+          <div key={step.key} className="flex-1 flex flex-col items-center relative">
+            {i > 0 && (
+              <span className={`absolute top-4 -left-1/2 w-full h-0.5 -translate-y-1/2 ${i <= idx ? 'bg-emerald-400' : 'bg-slate-200'}`} />
+            )}
+            <div className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${done ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400'}`}>
+              <Icon className="w-4 h-4" />
+            </div>
+            <span className={`mt-1.5 text-[11px] font-medium text-center ${done ? 'text-slate-700' : 'text-slate-400'}`}>
+              {step.label}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const SkeletonOrderCard = () => (
   <div className="bg-white rounded-2xl border border-slate-100 p-5 animate-pulse">
     <div className="flex items-center gap-4">
@@ -37,7 +76,6 @@ const SkeletonOrderCard = () => (
 const OrderCard = ({ order, index }) => {
   const [expanded, setExpanded] = useState(false);
   const cfg = statusConfig[order.status] || statusConfig.pending;
-  const StatusIcon = cfg.icon;
   const items = order.items?.filter(i => i.productName) || [];
 
   return (
@@ -94,6 +132,9 @@ const OrderCard = ({ order, index }) => {
             className="overflow-hidden"
           >
             <div className="border-t border-slate-100 px-5 py-4 space-y-3">
+              {/* Order progress timeline */}
+              <OrderTimeline status={order.status} />
+
               {items.length > 0 ? items.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">

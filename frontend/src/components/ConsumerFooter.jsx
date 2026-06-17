@@ -68,13 +68,13 @@ const ConsumerFooter = () => {
                 La marketplace qui connecte les meilleures boutiques avec leurs clients.
               </p>
               <div className="flex gap-2">
-                <a href="#" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-blue-100 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors">
+                <a href="#" aria-label="Notre site web" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-blue-100 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors">
                   <Globe className="w-4 h-4" />
                 </a>
-                <a href="#" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-pink-100 flex items-center justify-center text-slate-400 hover:text-pink-600 transition-colors">
+                <a href="#" aria-label="Nous contacter" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-pink-100 flex items-center justify-center text-slate-400 hover:text-pink-600 transition-colors">
                   <MessageCircle className="w-4 h-4" />
                 </a>
-                <a href="#" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-sky-100 flex items-center justify-center text-slate-400 hover:text-sky-500 transition-colors">
+                <a href="#" aria-label="Partager" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-sky-100 flex items-center justify-center text-slate-400 hover:text-sky-500 transition-colors">
                   <Share2 className="w-4 h-4" />
                 </a>
               </div>

@@ -127,6 +127,8 @@ const ConsumerHeader = () => {
             </AnimatePresence>
             <button
               onClick={() => setSearchOpen(!searchOpen)}
+              aria-label={searchOpen ? 'Fermer la recherche' : 'Rechercher'}
+              aria-expanded={searchOpen}
               className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors"
             >
               <Search className="w-5 h-5" />
@@ -137,6 +139,7 @@ const ConsumerHeader = () => {
           {isAuthenticated && (
             <Link
               to="/client/wishlist"
+              aria-label="Mes favoris"
               className="p-2 rounded-lg text-slate-500 hover:text-rose-500 hover:bg-slate-100 transition-colors relative"
             >
               <Heart className="w-5 h-5" />
@@ -146,6 +149,7 @@ const ConsumerHeader = () => {
           {/* Cart */}
           <button
             onClick={openCart}
+            aria-label={`Panier${cartCount > 0 ? ` (${cartCount} article${cartCount > 1 ? 's' : ''})` : ''}`}
             className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors relative"
           >
             <ShoppingBag className="w-5 h-5" />
@@ -161,6 +165,8 @@ const ConsumerHeader = () => {
             <div className="relative hidden md:block" ref={userMenuRef}>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
+                aria-label="Menu utilisateur"
+                aria-expanded={userMenuOpen}
                 className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl hover:bg-slate-100 transition-colors"
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
@@ -228,6 +234,8 @@ const ConsumerHeader = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            aria-expanded={mobileOpen}
             className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

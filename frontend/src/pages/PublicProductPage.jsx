@@ -5,11 +5,11 @@ import {
   Loader2, ShoppingBag, Plus, Minus, Star, ChevronRight, Heart,
   Shield, Truck, RotateCcw, CheckCircle2,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import useCartStore from '../store/useCartStore';
 import useAuthStore from '../store/useAuthStore';
 import useWishlistStore from '../store/useWishlistStore';
-import { setSEO } from '../utils/seo';
+import { setSEO, setJsonLd, productJsonLd } from '../utils/seo';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
@@ -69,7 +69,9 @@ const PublicProductPage = () => {
         description: p.description || `Achetez ${p.name} en ligne.`,
         image: p.images?.[0],
       });
+      setJsonLd('product', productJsonLd(p, data.shop?.name));
     }
+    return () => setJsonLd('product', null);
   }, [data, selectedVariantId]);
 
   if (isLoading) {
@@ -196,6 +198,8 @@ const PublicProductPage = () => {
               {isAuthenticated && (
                 <button
                   onClick={() => toggleWishlist(product.id)}
+                  aria-label={isWishlisted(product.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                  aria-pressed={isWishlisted(product.id)}
                   className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center hover:scale-110 transition-transform"
                 >
                   <Heart className={`w-5 h-5 ${isWishlisted(product.id) ? 'fill-rose-500 text-rose-500' : 'text-slate-400'}`} />
@@ -213,7 +217,7 @@ const PublicProductPage = () => {
                       selectedImage === idx ? 'border-blue-500 shadow-md shadow-blue-500/20' : 'border-transparent hover:border-slate-300'
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <img src={img} alt="" loading="lazy" className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -314,13 +318,15 @@ const PublicProductPage = () => {
               <div className="flex items-center border-2 border-slate-200 rounded-xl h-13 w-full sm:w-36 bg-white flex-shrink-0">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  aria-label="Diminuer la quantité"
                   className="w-12 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
-                <span className="flex-1 text-center font-bold text-slate-900 text-lg">{quantity}</span>
+                <span className="flex-1 text-center font-bold text-slate-900 text-lg" aria-live="polite">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
+                  aria-label="Augmenter la quantité"
                   className="w-12 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors"
                 >
                   <Plus className="w-4 h-4" />

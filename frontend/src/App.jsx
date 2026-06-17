@@ -33,6 +33,7 @@ const ConsumerLayout = lazy(() => import('./pages/ConsumerLayout'));
 const ExplorePage = lazy(() => import('./pages/ExplorePage'));
 const BoutiquesDirectoryPage = lazy(() => import('./pages/BoutiquesDirectoryPage'));
 const ProductsExplorePage = lazy(() => import('./pages/ProductsExplorePage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Client account pages
 const ClientLayout = lazy(() => import('./pages/ClientLayout'));
@@ -158,6 +159,9 @@ function App() {
           <Route path="products/:id" element={<ProductFormPage />} />
           <Route path="stock" element={<StockPage />} />
         </Route>
+
+        {/* 404 — catch-all */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </Suspense>
       </MaintenanceGate>

@@ -29,6 +29,8 @@ const ProductCard = ({
             e.stopPropagation();
             onWishlistToggle(product.id);
           }}
+          aria-label={isWishlisted ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+          aria-pressed={isWishlisted}
           className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm shadow-sm flex items-center justify-center hover:scale-110 transition-transform"
         >
           <Heart

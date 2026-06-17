@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Loader2, ShoppingBag, Search, Store, ChevronRight, MapPin, Package } from 'lucide-react';
+import { ShoppingBag, Search, Store, ChevronRight, MapPin, Package } from 'lucide-react';
 import { motion } from 'framer-motion';
-import useCartStore from '../store/useCartStore';
 import { ensureGoogleFont } from '../utils/fonts';
-import { setSEO } from '../utils/seo';
+import { setSEO, setJsonLd } from '../utils/seo';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
@@ -29,7 +28,6 @@ const PublicShopPage = () => {
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('newest');
-  const { addItem } = useCartStore();
 
   useEffect(() => {
     const fetchShop = async () => {
@@ -56,7 +54,16 @@ const PublicShopPage = () => {
         description: s.description || `Decouvrez les produits de ${s.name} sur BoutiqueKi.`,
         image: s.logo_url || s.banner_url,
       });
+      setJsonLd('shop', {
+        '@context': 'https://schema.org/',
+        '@type': 'Store',
+        name: s.name,
+        description: s.description || undefined,
+        image: s.logo_url || s.banner_url || undefined,
+        url: typeof window !== 'undefined' ? window.location.href : undefined,
+      });
     }
+    return () => setJsonLd('shop', null);
   }, [shopData]);
 
   if (isLoading) {

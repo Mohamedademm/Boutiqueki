@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap (served by the API). Replace with your production API domain if different.
+Sitemap: https://boutiqueki-backend.vercel.app/sitemap.xml
