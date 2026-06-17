@@ -3,6 +3,7 @@ node_modules/
 .env.*
 !.env.example
 *.log
-uploads/
+# Runtime upload destination only — NOT the source module backend/src/modules/uploads/.
+/uploads/
 
 .vercel

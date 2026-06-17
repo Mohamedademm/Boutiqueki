@@ -2,6 +2,7 @@ const express = require('express');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 const { OAuth2Client } = require('google-auth-library');
 const { db, createSuccessResponse, createErrorResponse } = require('../../utils');
 const { sendEmail } = require('../../utils/email');
@@ -13,6 +14,16 @@ const { RegisterSchema, LoginSchema, ForgotPasswordSchema, ResetPasswordSchema }
 const sha256 = (s) => crypto.createHash('sha256').update(s).digest('hex');
 
 const router = express.Router();
+
+// Stricter limiter for credential-sensitive endpoints (brute-force protection).
+// The global limiter (1000/15min) is too loose for login/register/password flows.
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Trop de tentatives. Réessayez dans quelques minutes.' },
+});
 
 const generateTokens = (user) => {
   const payload = { id: user.id, email: user.email, role: user.role };
@@ -41,7 +52,7 @@ const setRefreshCookie = (res, refreshToken) => {
   });
 };
 
-router.post('/register', validate(RegisterSchema), auditLog('USER_REGISTER', '/api/auth/register'), async (req, res, next) => {
+router.post('/register', authLimiter, validate(RegisterSchema), auditLog('USER_REGISTER', '/api/auth/register'), async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -79,7 +90,7 @@ router.post('/register', validate(RegisterSchema), auditLog('USER_REGISTER', '/a
   }
 });
 
-router.post('/login', validate(LoginSchema), auditLog('USER_LOGIN', '/api/auth/login'), async (req, res, next) => {
+router.post('/login', authLimiter, validate(LoginSchema), auditLog('USER_LOGIN', '/api/auth/login'), async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -152,7 +163,7 @@ router.post('/google', auditLog('USER_GOOGLE_AUTH', '/api/auth/google'), async (
       } else {
         const inserted = await db.query(
           `INSERT INTO users (name, email, google_id, avatar_url, role)
-           VALUES ($1, $2, $3, $4, 'owner')
+           VALUES ($1, $2, $3, $4, 'client')
            RETURNING id, name, email, role`,
           [name || email.split('@')[0], email, googleId, picture || null]
         );
@@ -220,7 +231,7 @@ router.post('/logout', authMiddleware, async (req, res, next) => {
   }
 });
 
-router.post('/forgot-password', validate(ForgotPasswordSchema), auditLog('PASSWORD_FORGOT', '/api/auth/forgot-password'), async (req, res, next) => {
+router.post('/forgot-password', authLimiter, validate(ForgotPasswordSchema), auditLog('PASSWORD_FORGOT', '/api/auth/forgot-password'), async (req, res, next) => {
   try {
     const { email } = req.body;
     const result = await db.query('SELECT id, name FROM users WHERE email = $1', [email]);
@@ -255,7 +266,7 @@ router.post('/forgot-password', validate(ForgotPasswordSchema), auditLog('PASSWO
   }
 });
 
-router.post('/reset-password', validate(ResetPasswordSchema), auditLog('PASSWORD_RESET', '/api/auth/reset-password'), async (req, res, next) => {
+router.post('/reset-password', authLimiter, validate(ResetPasswordSchema), auditLog('PASSWORD_RESET', '/api/auth/reset-password'), async (req, res, next) => {
   try {
     const { token, password } = req.body;
     const result = await db.query(

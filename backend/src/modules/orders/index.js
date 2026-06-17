@@ -3,6 +3,17 @@ const router = express.Router();
 const db = require('../../utils/db');
 const protect = require('../../middleware/auth');
 const requireRole = require('../../middleware/requireRole');
+const { sendEmail } = require('../../utils/email');
+
+const ORDER_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+
+// Customer-facing message for each status change (null = no email sent).
+const STATUS_EMAIL = {
+  processing: { subject: 'Votre commande est en préparation', line: 'Bonne nouvelle ! Votre commande est en cours de préparation.' },
+  shipped:    { subject: 'Votre commande a été expédiée',     line: 'Votre commande vient d\'être expédiée et arrive bientôt.' },
+  delivered:  { subject: 'Votre commande a été livrée',       line: 'Votre commande a été livrée. Merci pour votre confiance !' },
+  cancelled:  { subject: 'Votre commande a été annulée',      line: 'Votre commande a été annulée. Contactez-nous pour toute question.' },
+};
 
 // @route   GET /api/shops/:shopId/orders
 // @desc    Get all orders for a shop
@@ -158,6 +169,13 @@ router.put('/:shopId/orders/:id/status', protect, requireRole(['owner', 'admin']
     const { shopId, id } = req.params;
     const { status } = req.body;
 
+    if (!ORDER_STATUSES.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Statut invalide. Valeurs autorisées : ${ORDER_STATUSES.join(', ')}.`,
+      });
+    }
+
     const { rows } = await db.query(
       `UPDATE orders SET status = $1, updated_at = NOW() WHERE id = $2 AND shop_id = $3 RETURNING *`,
       [status, id, shopId]
@@ -167,9 +185,26 @@ router.put('/:shopId/orders/:id/status', protect, requireRole(['owner', 'admin']
       return res.status(404).json({ success: false, message: 'Order not found' });
     }
 
+    const order = rows[0];
+
+    // Notify the customer of the status change (fire-and-forget — never block the response).
+    const tpl = STATUS_EMAIL[status];
+    const email = order.customer?.email;
+    if (tpl && email) {
+      const ref = String(order.id).slice(0, 8).toUpperCase();
+      sendEmail({
+        to: email,
+        subject: `${tpl.subject} — Commande #${ref}`,
+        html: `<p>Bonjour ${order.customer?.firstName || ''},</p>
+               <p>${tpl.line}</p>
+               <p>Référence : <strong>#${ref}</strong> — Total : <strong>${Number(order.total).toFixed(2)} €</strong></p>`,
+        text: `${tpl.line} (Commande #${ref})`,
+      }).catch(() => {});
+    }
+
     res.json({
       success: true,
-      data: rows[0],
+      data: order,
     });
   } catch (err) {
     next(err);
