@@ -17,7 +17,7 @@ const SkeletonCard = () => (
 );
 
 const WishlistPage = () => {
-  const { items, isLoaded, loadWishlist, toggleWishlist, isWishlisted, clearWishlist } = useWishlistStore();
+  const { items, isLoaded, loadWishlist, toggleWishlist, isWishlisted } = useWishlistStore();
   const [isLoading, setIsLoading] = useState(!isLoaded);
   const [clearing, setClearing] = useState(false);
 

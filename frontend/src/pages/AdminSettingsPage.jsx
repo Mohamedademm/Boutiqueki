@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Loader2, Save, Palette, FileText, ToggleLeft, Euro, ShieldAlert, Check,
+  Loader2, Save, Palette, FileText, ToggleLeft, Euro, ShieldAlert,
 } from 'lucide-react';
 import api from '../utils/axios';
 import useAuthStore from '../store/useAuthStore';

@@ -2,10 +2,9 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import {
   ArrowLeft, Save, LayoutTemplate, Palette, Type, Image as ImageIcon,
   CheckCircle2, Loader2, Monitor, Smartphone, Tablet, ExternalLink,
-  ShoppingCart, RotateCcw, Eye, ChevronDown,
+  ShoppingCart, RotateCcw, Eye,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import useAuthStore from '../store/useAuthStore';
 import axios from '../utils/axios';
 import { ensureGoogleFont } from '../utils/fonts';
 import ImageUploader from '../components/ImageUploader';
@@ -101,7 +100,7 @@ const SectionTitle = ({ children }) => (
 );
 
 /* ─── Toast notification ───────────────────────────────────── */
-const Toast = ({ message, type = 'success', onDismiss }) => (
+const Toast = ({ message, type = 'success' }) => (
   <motion.div
     initial={{ opacity: 0, y: 16, scale: 0.95 }}
     animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -118,7 +117,7 @@ const Toast = ({ message, type = 'success', onDismiss }) => (
 );
 
 /* ─── Live Preview ─────────────────────────────────────────── */
-const LivePreview = ({ shop, previewMode }) => {
+const LivePreview = ({ shop }) => {
   const { theme, name, description } = shop;
   const tpl = TEMPLATES.find(t => t.id === theme.template) || TEMPLATES[0];
   const primaryColor   = theme.primaryColor   || '#1E3A5F';
@@ -220,7 +219,6 @@ const LivePreview = ({ shop, previewMode }) => {
 /* ─── Main page ────────────────────────────────────────────── */
 const ShopBuilderPage = () => {
   const navigate = useNavigate();
-  const { token } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('theme');
@@ -291,7 +289,7 @@ const ShopBuilderPage = () => {
       });
       setIsDirty(false);
       showToast('Boutique publiée avec succès !');
-    } catch (err) {
+    } catch {
       showToast('Échec de la sauvegarde.', 'error');
     } finally {
       setIsSaving(false);

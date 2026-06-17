@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Search, Store, Loader2 } from 'lucide-react';
+import { Search, Store } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ShopCard from '../components/ShopCard';
 

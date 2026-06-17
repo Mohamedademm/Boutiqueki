@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import api from '../utils/axios';
 import {
   Loader2, Package, Search, Clock, CheckCircle2, Truck,
-  XCircle, ShoppingBag, TrendingUp, Euro, Filter,
-  ChevronDown, Eye, Store,
+  XCircle, ShoppingBag, Euro,
+  ChevronDown, Store,
 } from 'lucide-react';
 import { useShop } from '../hooks/useShop';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,7 +19,6 @@ const STATUS_CONFIG = {
 
 const StatusBadge = ({ status }) => {
   const c = STATUS_CONFIG[status] || STATUS_CONFIG.pending;
-  const Icon = c.icon;
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${c.badge}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
@@ -54,7 +53,6 @@ const OrdersPage = () => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [updatingId, setUpdatingId] = useState(null);
-  const [expandedId, setExpandedId] = useState(null);
   const { showToast, toast } = useToast();
 
   const fetchOrders = useCallback(() => {

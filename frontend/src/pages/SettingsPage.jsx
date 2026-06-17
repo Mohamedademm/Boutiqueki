@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import api from '../utils/axios';
 import useAuthStore from '../store/useAuthStore';
 import {
-  User, Lock, Bell, Palette, Shield, Save, Loader2, Check,
-  Eye, EyeOff, Moon, Sun, Store, ExternalLink, LogOut,
+  User, Lock, Palette, Shield, Save, Loader2, Check,
+  Eye, EyeOff, Store, ExternalLink, LogOut,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';

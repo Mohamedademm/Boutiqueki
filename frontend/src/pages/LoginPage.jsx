@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/useAuthStore';
-import { Store, Mail, Lock, ArrowRight, Loader2, CheckCircle2, TrendingUp, ShoppingBag, Zap } from 'lucide-react';
+import { Store, Mail, Lock, ArrowRight, Loader2, TrendingUp, ShoppingBag, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ThemeToggle from '../components/ThemeToggle';
 import GoogleAuthButton from '../components/GoogleAuthButton';

@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import {
   AlertTriangle,
   ArrowUpRight,
-  Loader2,
   Package,
   Plus,
   Store,

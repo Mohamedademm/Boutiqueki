@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../utils/axios';
 import {
   Loader2, Search, Users, ShieldCheck, Ban, Trash2,

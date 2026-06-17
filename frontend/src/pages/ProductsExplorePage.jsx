@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { Search, SlidersHorizontal, X, Loader2, ShoppingBag } from 'lucide-react';
+import { Search, SlidersHorizontal, X, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ProductCard from '../components/ProductCard';
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
-  Search, ArrowRight, Sparkles, TrendingUp, Store, Tag, Loader2,
+  Search, ArrowRight, Sparkles, TrendingUp, Store, Tag,
   Shield, Truck, CreditCard, Star,
 } from 'lucide-react';
 import { motion } from 'framer-motion';

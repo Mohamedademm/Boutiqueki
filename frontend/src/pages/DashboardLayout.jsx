@@ -1,5 +1,4 @@
 import { Outlet, useLocation, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import ThemeToggle from '../components/ThemeToggle';
 import { Bell, ChevronRight } from 'lucide-react';
@@ -18,22 +17,6 @@ const breadcrumbMap = {
   '/dashboard/admin/shops': 'Boutiques',
 };
 
-const useSidebarWidth = () => {
-  const [width, setWidth] = useState(() => localStorage.getItem('sidebar-collapsed') === 'true' ? 72 : 256);
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setWidth(localStorage.getItem('sidebar-collapsed') === 'true' ? 72 : 256);
-    });
-    observer.observe(document.body, { subtree: true, attributes: true });
-    const onStorage = () => {
-      setWidth(localStorage.getItem('sidebar-collapsed') === 'true' ? 72 : 256);
-    };
-    window.addEventListener('storage', onStorage);
-    return () => { observer.disconnect(); window.removeEventListener('storage', onStorage); };
-  }, []);
-  return width;
-};
-
 const DashboardLayout = () => {
   const location = useLocation();
   const { user } = useAuthStore();
@@ -47,8 +30,6 @@ const DashboardLayout = () => {
     const label = breadcrumbMap[path];
     if (label) crumbs.push({ label, href: path });
   }
-
-  const pageTitle = crumbs[crumbs.length - 1]?.label || 'Dashboard';
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0A0F1E] flex">

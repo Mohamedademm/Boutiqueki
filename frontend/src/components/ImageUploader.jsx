@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { UploadCloud, X, Loader2, Plus } from 'lucide-react';
+import { UploadCloud, X, Loader2 } from 'lucide-react';
 import api from '../utils/axios';
 
 /**

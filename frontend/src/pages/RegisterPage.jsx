@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/useAuthStore';
 import { Mail, Lock, User as UserIcon, ArrowRight, Loader2, Store, ShoppingBag, CheckCircle2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import GoogleAuthButton from '../components/GoogleAuthButton';
 
 const RoleCard = ({ role, title, description, icon: Icon, gradient, selected, onSelect }) => (
