@@ -5,7 +5,6 @@ import {
   Archive,
   Edit3,
   Filter,
-  Loader2,
   Package,
   Plus,
   Search,
@@ -50,7 +49,7 @@ const ProductAvatar = ({ product, size = 'md' }) => {
   const image = product.images?.[0];
   const sz = size === 'lg' ? 'w-20 h-20 rounded-2xl text-2xl' : 'w-12 h-12 rounded-xl text-base';
   if (image) {
-    return <img src={image} alt={product.name} className={`${sz} object-cover flex-shrink-0 border border-slate-100 dark:border-slate-800`} />;
+    return <img src={image} alt={product.name} loading="lazy" className={`${sz} object-cover flex-shrink-0 border border-slate-100 dark:border-slate-800`} />;
   }
   const idx = product.name.charCodeAt(0) % 6;
   const palettes = [
@@ -72,7 +71,6 @@ const ProductAvatar = ({ product, size = 'md' }) => {
 /* ─── Card view ─────────────────────────────────────────────── */
 const ProductCard = ({ product, onEdit, onArchive, isArchiving }) => {
   const stock = getStock(product);
-  const cfg = statusConfig[product.status] || statusConfig.draft;
   return (
     <div className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-indigo-500/10 hover:border-indigo-200 dark:hover:border-indigo-800 transition-all duration-300 overflow-hidden flex flex-col">
       {/* Top accent bar */}

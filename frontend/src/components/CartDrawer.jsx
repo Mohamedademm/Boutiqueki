@@ -66,7 +66,7 @@ const CartDrawer = ({ theme = {} }) => {
                 {/* Image */}
                 <div className="w-20 h-20 bg-slate-100 rounded-xl overflow-hidden flex-shrink-0">
                   {item.images && item.images[0] ? (
-                    <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
+                    <img src={item.images[0]} alt={item.name} loading="lazy" className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-slate-300">
                       <ShoppingBag className="w-8 h-8" />

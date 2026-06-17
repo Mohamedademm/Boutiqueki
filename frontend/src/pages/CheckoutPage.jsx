@@ -290,7 +290,7 @@ const CheckoutPage = () => {
                 <div key={idx} className="flex gap-4">
                   <div className="w-16 h-16 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 relative">
                     {item.images && item.images[0] ? (
-                      <img src={item.images[0]} alt="" className="w-full h-full object-cover" />
+                      <img src={item.images[0]} alt="" loading="lazy" className="w-full h-full object-cover" />
                     ) : (
                       <ShoppingBag className="w-6 h-6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-slate-300" />
                     )}
