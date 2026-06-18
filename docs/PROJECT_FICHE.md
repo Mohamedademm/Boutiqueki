@@ -39,6 +39,14 @@
 - **UI** : Framer Motion (animations), lucide-react (icônes ⚠️ **Facebook/Instagram/Twitter n'existent PAS dans lucide-react**), recharts (graphiques analytics).
 - **HTTP** : axios avec intercepteur (`utils/axios.js`) — `VITE_API_URL` configurable.
 
+### Dark mode
+- **Clair par défaut** + bouton (soleil/lune) dans le header consumer, choix mémorisé (`localStorage.theme`).
+- Tailwind `darkMode: 'class'` (classe `.dark` sur `<html>`). Toutes les pages client ont des variantes `dark:` (palette : page `slate-950`, surfaces `slate-900`, inputs `slate-800`, texte clair).
+- ⚠️ Après ajout massif de classes via script externe, **redémarrer le serveur Vite** pour que Tailwind régénère le CSS (sinon les nouvelles classes `dark:` ne s'appliquent pas en dev).
+
+### Données de démo (seed)
+- `cd backend && npm run seed` → catalogue riche : 5 boutiques thématiques + enrichit les boutiques existantes (~60 produits actifs, images Unsplash, variantes, stock). Idempotent. Vendeurs démo : mot de passe `password123`.
+
 ### Base de données — IMPORTANT
 - **Local** : PostgreSQL via **Docker Desktop** (conteneur `boutiqueki`, image `postgres:15-alpine`, port `5432`, DB `boutiki`). C'est ce que le `.env` actif utilise : `DATABASE_URL=postgresql://user:password@localhost:5432/boutiki`.
 - **Production** : **Neon.tech** (PostgreSQL serverless, région AWS Europe Central 1 / Frankfurt). La `DATABASE_URL` Neon est **commentée** dans le `.env` local et configurée dans les variables d'env Vercel.
@@ -173,6 +181,7 @@ Classés par priorité. ✅ = corrigé, ⬜ = à faire.
 
 > Une ligne par session/itération. Le plus récent en haut.
 
+- **2026-06-18** *(dark mode + seed)* — `npm run seed` (catalogue riche : 5 boutiques + enrichissement → 60 produits, images réelles). **Dark mode** sur toutes les pages client (clair par défaut + toggle header) : 525 variantes `dark:` via codemod, palette cohérente. Vérifié en preview (light + dark OK, screenshot). Build ✓, lint 0 erreur.
 - **2026-06-18** *(SEO HTML)* — `index.html` : `lang="en"→"fr"`, meta description + Open Graph par défaut + theme-color ; ajout `public/robots.txt` (réf. sitemap). Vérifié (lang=fr, robots 200, build ✓).
 - **2026-06-18** *(emails statut + a11y)* — Emails de changement de statut commande + validation enum du statut côté API (route `PUT /orders/:id/status`). 2e passe accessibilité (aria-labels footer social, wishlist, steppers quantité + aria-pressed/aria-live). Vérifié en preview. Tout vert.
 - **2026-06-18** *(404 + suivi commande + tests)* — Page 404 dédiée + route catch-all, timeline de statut de commande sur l'espace client, +7 tests backend (protection des routes wishlist/claims/orders + régression rôle par défaut `client`). Backend **47 → 54 tests**. Lint clean, build ✓, 404 vérifiée en preview.
