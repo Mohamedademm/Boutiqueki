@@ -63,12 +63,12 @@ const ProductsExplorePage = () => {
     <div className="space-y-6">
       {/* Categories */}
       <div>
-        <h3 className="text-sm font-bold text-slate-900 mb-3">Categories</h3>
+        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-3">Categories</h3>
         <div className="space-y-1.5 max-h-60 overflow-y-auto">
           <button
             onClick={() => updateParam('category', '')}
             className={`block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-              !category ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-100'
+              !category ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             Toutes
@@ -78,7 +78,7 @@ const ProductsExplorePage = () => {
               key={cat}
               onClick={() => updateParam('category', cat)}
               className={`block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                category === cat ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 hover:bg-slate-100'
+                category === cat ? 'bg-slate-900 text-white font-semibold' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               {cat}
@@ -89,14 +89,14 @@ const ProductsExplorePage = () => {
 
       {/* Price range */}
       <div>
-        <h3 className="text-sm font-bold text-slate-900 mb-3">Prix</h3>
+        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-3">Prix</h3>
         <div className="flex gap-2">
           <input
             type="number"
             placeholder="Min"
             value={minPrice}
             onChange={(e) => updateParam('minPrice', e.target.value)}
-            className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <span className="self-center text-slate-400">-</span>
           <input
@@ -104,7 +104,7 @@ const ProductsExplorePage = () => {
             placeholder="Max"
             value={maxPrice}
             onChange={(e) => updateParam('maxPrice', e.target.value)}
-            className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
@@ -130,10 +130,10 @@ const ProductsExplorePage = () => {
     <div className="max-w-7xl mx-auto px-6 py-10">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <h1 className="text-3xl font-black text-slate-900 mb-2">
+        <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100 mb-2">
           {search ? `Resultats pour "${search}"` : category ? category : 'Tous les produits'}
         </h1>
-        <p className="text-slate-500">
+        <p className="text-slate-500 dark:text-slate-400">
           {isLoading ? 'Chargement...' : `${total} produit${total !== 1 ? 's' : ''} trouve${total !== 1 ? 's' : ''}`}
         </p>
       </motion.div>
@@ -147,13 +147,13 @@ const ProductsExplorePage = () => {
             defaultValue={search}
             onKeyDown={(e) => { if (e.key === 'Enter') updateParam('search', e.target.value); }}
             placeholder="Rechercher un produit..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <select
           value={sort}
           onChange={(e) => updateParam('sort', e.target.value)}
-          className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="newest">Plus recents</option>
           <option value="price_asc">Prix croissant</option>
@@ -165,7 +165,7 @@ const ProductsExplorePage = () => {
           className={`lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-colors ${
             filtersOpen || activeFilters > 0
               ? 'bg-slate-900 text-white border-slate-900'
-              : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
+              : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-slate-300'
           }`}
         >
           <SlidersHorizontal className="w-4 h-4" />
@@ -214,7 +214,7 @@ const ProductsExplorePage = () => {
       <div className="flex gap-8">
         {/* Desktop sidebar filters */}
         <aside className="hidden lg:block w-56 flex-shrink-0">
-          <div className="sticky top-24 bg-white rounded-2xl border border-slate-100 p-5">
+          <div className="sticky top-24 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5">
             <FilterPanel />
           </div>
         </aside>
@@ -223,10 +223,10 @@ const ProductsExplorePage = () => {
         {filtersOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/50" onClick={() => setFiltersOpen(false)} />
-            <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 max-h-[70vh] overflow-y-auto">
+            <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-slate-900 rounded-t-3xl p-6 max-h-[70vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="font-bold text-lg text-slate-900">Filtres</h2>
-                <button onClick={() => setFiltersOpen(false)} className="p-2 rounded-lg hover:bg-slate-100">
+                <h2 className="font-bold text-lg text-slate-900 dark:text-slate-100">Filtres</h2>
+                <button onClick={() => setFiltersOpen(false)} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -240,7 +240,7 @@ const ProductsExplorePage = () => {
           {isLoading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-slate-100 overflow-hidden animate-pulse">
+                <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden animate-pulse">
                   <div className="aspect-square bg-slate-200" />
                   <div className="p-4 space-y-2">
                     <div className="h-3 bg-slate-200 rounded w-1/3" />
@@ -251,10 +251,10 @@ const ProductsExplorePage = () => {
               ))}
             </div>
           ) : products.length === 0 ? (
-            <div className="rounded-2xl border-2 border-dashed border-slate-200 p-16 text-center">
+            <div className="rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 p-16 text-center">
               <ShoppingBag className="w-14 h-14 text-slate-300 mx-auto mb-4" />
-              <p className="font-bold text-slate-700 mb-2">Aucun produit trouve</p>
-              <p className="text-sm text-slate-500">Essayez avec d'autres filtres ou termes de recherche.</p>
+              <p className="font-bold text-slate-700 dark:text-slate-200 mb-2">Aucun produit trouve</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Essayez avec d'autres filtres ou termes de recherche.</p>
             </div>
           ) : (
             <>
@@ -275,19 +275,19 @@ const ProductsExplorePage = () => {
               {/* Pagination */}
               {total > LIMIT && (
                 <div className="flex items-center justify-between pt-8">
-                  <p className="text-sm text-slate-500">{total} produit{total > 1 ? 's' : ''}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{total} produit{total > 1 ? 's' : ''}</p>
                   <div className="flex gap-2">
                     <button
                       disabled={page <= 1}
                       onClick={() => updateParam('page', String(page - 1))}
-                      className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
+                      className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
                     >
                       Precedent
                     </button>
                     <button
                       disabled={page * LIMIT >= total}
                       onClick={() => updateParam('page', String(page + 1))}
-                      className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
+                      className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
                     >
                       Suivant
                     </button>

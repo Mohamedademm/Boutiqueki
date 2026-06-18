@@ -6,7 +6,7 @@ import useWishlistStore from '../store/useWishlistStore';
 import ProductCard from '../components/ProductCard';
 
 const SkeletonCard = () => (
-  <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden animate-pulse">
+  <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden animate-pulse">
     <div className="aspect-square bg-slate-200" />
     <div className="p-4 space-y-2">
       <div className="h-3 bg-slate-200 rounded w-1/3" />
@@ -54,8 +54,8 @@ const WishlistPage = () => {
               <Heart className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-slate-900">Mes favoris</h1>
-              <p className="text-slate-500 text-sm mt-0.5">
+              <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100">Mes favoris</h1>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
                 {isLoading
                   ? 'Chargement...'
                   : activeItems.length > 0
@@ -68,7 +68,7 @@ const WishlistPage = () => {
             <button
               onClick={handleClearAll}
               disabled={clearing}
-              className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors disabled:opacity-50"
             >
               <Trash2 className="w-4 h-4" />
               Tout supprimer
@@ -89,13 +89,13 @@ const WishlistPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-3xl bg-white border border-slate-100 p-16 text-center"
+          className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 text-center"
         >
           <div className="w-24 h-24 bg-gradient-to-br from-rose-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Heart className="w-10 h-10 text-rose-300" />
           </div>
-          <p className="text-xl font-bold text-slate-800 mb-2">Aucun favori pour l'instant</p>
-          <p className="text-sm text-slate-500 mb-8 max-w-sm mx-auto">
+          <p className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Aucun favori pour l'instant</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-8 max-w-sm mx-auto">
             Explorez nos boutiques et ajoutez des produits a vos favoris en cliquant sur le coeur.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -108,7 +108,7 @@ const WishlistPage = () => {
             </Link>
             <Link
               to="/explore/products"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-semibold hover:bg-slate-200 transition-colors"
             >
               <Sparkles className="w-4 h-4" />
               Voir les nouveautes

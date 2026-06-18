@@ -11,7 +11,7 @@ const ShopCard = ({ shop, delay = 0 }) => {
     >
       <Link
         to={`/s/${shop.slug}`}
-        className="group block bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+        className="group block bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
       >
         {/* Banner */}
         <div className="h-32 bg-gradient-to-br from-slate-100 to-slate-200 relative overflow-hidden">
@@ -27,7 +27,7 @@ const ShopCard = ({ shop, delay = 0 }) => {
           )}
           {/* Logo overlay */}
           <div className="absolute -bottom-6 left-5">
-            <div className="w-14 h-14 rounded-xl bg-white shadow-md border border-slate-100 flex items-center justify-center overflow-hidden">
+            <div className="w-14 h-14 rounded-xl bg-white dark:bg-slate-900 shadow-md border border-slate-100 dark:border-slate-800 flex items-center justify-center overflow-hidden">
               {shop.logoUrl ? (
                 <img src={shop.logoUrl} alt="" className="w-full h-full object-cover" />
               ) : (
@@ -39,11 +39,11 @@ const ShopCard = ({ shop, delay = 0 }) => {
 
         {/* Info */}
         <div className="pt-9 pb-5 px-5">
-          <h3 className="font-bold text-slate-900 text-base mb-1 group-hover:text-blue-600 transition-colors">
+          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base mb-1 group-hover:text-blue-600 transition-colors">
             {shop.name}
           </h3>
           {shop.description && (
-            <p className="text-sm text-slate-500 line-clamp-2 mb-3 leading-relaxed">
+            <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-3 leading-relaxed">
               {shop.description}
             </p>
           )}

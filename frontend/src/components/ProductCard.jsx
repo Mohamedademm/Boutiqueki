@@ -19,7 +19,7 @@ const ProductCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.35 }}
-      className="group relative bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+      className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
       {/* Wishlist button */}
       {onWishlistToggle && (
@@ -31,7 +31,7 @@ const ProductCard = ({
           }}
           aria-label={isWishlisted ? 'Retirer des favoris' : 'Ajouter aux favoris'}
           aria-pressed={isWishlisted}
-          className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm shadow-sm flex items-center justify-center hover:scale-110 transition-transform"
+          className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-sm flex items-center justify-center hover:scale-110 transition-transform"
         >
           <Heart
             className={`w-4.5 h-4.5 transition-colors ${
@@ -45,7 +45,7 @@ const ProductCard = ({
 
       <Link to={`/s/${shopSlug}/p/${product.id}`}>
         {/* Image */}
-        <div className="aspect-square bg-slate-100 overflow-hidden relative">
+        <div className="aspect-square bg-slate-100 dark:bg-slate-800 overflow-hidden relative">
           {product.images && product.images[0] ? (
             <img
               src={product.images[0]}
@@ -72,11 +72,11 @@ const ProductCard = ({
               {product.category}
             </p>
           )}
-          <h3 className="font-bold text-slate-800 text-sm leading-snug mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm leading-snug mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
             {product.name}
           </h3>
           <div className="flex items-baseline gap-2">
-            <span className="font-black text-lg text-slate-900">
+            <span className="font-black text-lg text-slate-900 dark:text-slate-100">
               {Number(product.price).toFixed(2)} €
             </span>
             {hasPromo && (
@@ -88,7 +88,7 @@ const ProductCard = ({
 
           {/* Shop badge */}
           {showShopBadge && shopName && (
-            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
+            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
               {shopLogo ? (
                 <img src={shopLogo} alt="" className="w-5 h-5 rounded-full object-cover" />
               ) : (
@@ -96,7 +96,7 @@ const ProductCard = ({
                   <ShoppingBag className="w-3 h-3 text-slate-400" />
                 </div>
               )}
-              <span className="text-xs font-medium text-slate-500 truncate">{shopName}</span>
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate">{shopName}</span>
             </div>
           )}
         </div>

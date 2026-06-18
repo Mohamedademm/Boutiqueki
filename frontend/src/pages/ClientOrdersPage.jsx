@@ -41,10 +41,10 @@ const OrderTimeline = ({ status }) => {
             {i > 0 && (
               <span className={`absolute top-4 -left-1/2 w-full h-0.5 -translate-y-1/2 ${i <= idx ? 'bg-emerald-400' : 'bg-slate-200'}`} />
             )}
-            <div className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${done ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400'}`}>
+            <div className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${done ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>
               <Icon className="w-4 h-4" />
             </div>
-            <span className={`mt-1.5 text-[11px] font-medium text-center ${done ? 'text-slate-700' : 'text-slate-400'}`}>
+            <span className={`mt-1.5 text-[11px] font-medium text-center ${done ? 'text-slate-700 dark:text-slate-200' : 'text-slate-400'}`}>
               {step.label}
             </span>
           </div>
@@ -55,19 +55,19 @@ const OrderTimeline = ({ status }) => {
 };
 
 const SkeletonOrderCard = () => (
-  <div className="bg-white rounded-2xl border border-slate-100 p-5 animate-pulse">
+  <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 animate-pulse">
     <div className="flex items-center gap-4">
       <div className="w-12 h-12 bg-slate-200 rounded-xl" />
       <div className="flex-1 space-y-2">
         <div className="flex gap-2">
           <div className="h-5 bg-slate-200 rounded w-24" />
-          <div className="h-5 bg-slate-100 rounded-full w-20" />
+          <div className="h-5 bg-slate-100 dark:bg-slate-800 rounded-full w-20" />
         </div>
-        <div className="h-3 bg-slate-100 rounded w-40" />
+        <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-40" />
       </div>
       <div className="space-y-2 text-right">
         <div className="h-6 bg-slate-200 rounded w-20 ml-auto" />
-        <div className="h-3 bg-slate-100 rounded w-12 ml-auto" />
+        <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-12 ml-auto" />
       </div>
     </div>
   </div>
@@ -84,7 +84,7 @@ const OrderCard = ({ order, index }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
     >
       {/* Header */}
       <div className="p-5 flex items-center gap-4">
@@ -93,7 +93,7 @@ const OrderCard = ({ order, index }) => {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center flex-wrap gap-2 mb-1">
-            <span className="font-black text-slate-900">
+            <span className="font-black text-slate-900 dark:text-slate-100">
               #{String(order.id).slice(0, 8).toUpperCase()}
             </span>
             <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full border ${cfg.color}`}>
@@ -101,7 +101,7 @@ const OrderCard = ({ order, index }) => {
               {cfg.label}
             </span>
           </div>
-          <div className="flex items-center gap-3 text-xs text-slate-500">
+          <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1">
               <Store className="w-3 h-3" />
               {order.shopName || 'Boutique'}
@@ -111,10 +111,10 @@ const OrderCard = ({ order, index }) => {
           </div>
         </div>
         <div className="text-right flex-shrink-0">
-          <p className="font-black text-xl text-slate-900">{Number(order.total).toFixed(2)} €</p>
+          <p className="font-black text-xl text-slate-900 dark:text-slate-100">{Number(order.total).toFixed(2)} €</p>
           <button
             onClick={() => setExpanded(!expanded)}
-            className="mt-1 text-xs font-semibold text-slate-400 hover:text-slate-700 flex items-center gap-1 ml-auto transition-colors"
+            className="mt-1 text-xs font-semibold text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1 ml-auto transition-colors"
           >
             {expanded ? 'Masquer' : 'Details'}
             {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
@@ -131,32 +131,32 @@ const OrderCard = ({ order, index }) => {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="border-t border-slate-100 px-5 py-4 space-y-3">
+            <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-4 space-y-3">
               {/* Order progress timeline */}
               <OrderTimeline status={order.status} />
 
               {items.length > 0 ? items.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
                     <Package className="w-4 h-4 text-slate-400" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-slate-800">{item.productName}</p>
-                    {item.variantName && <p className="text-xs text-slate-500">{item.variantName}</p>}
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{item.productName}</p>
+                    {item.variantName && <p className="text-xs text-slate-500 dark:text-slate-400">{item.variantName}</p>}
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-slate-700">x{item.quantity}</p>
-                    <p className="text-xs text-slate-500">{Number(item.price).toFixed(2)} €</p>
+                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200">x{item.quantity}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{Number(item.price).toFixed(2)} €</p>
                   </div>
                 </div>
               )) : (
-                <p className="text-sm text-slate-500 text-center py-2">Details des produits non disponibles</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-2">Details des produits non disponibles</p>
               )}
 
               {order.customer?.address && (
-                <div className="bg-slate-50 rounded-xl p-3 mt-3">
-                  <p className="text-xs font-semibold text-slate-600 mb-1">Adresse de livraison</p>
-                  <p className="text-xs text-slate-500">
+                <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 mt-3">
+                  <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Adresse de livraison</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     {order.customer.address}, {order.customer.postalCode} {order.customer.city}
                   </p>
                 </div>
@@ -164,7 +164,7 @@ const OrderCard = ({ order, index }) => {
             </div>
 
             {order.status !== 'cancelled' && (
-              <div className="border-t border-slate-100 px-5 py-3">
+              <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-3">
                 <Link
                   to={`/client/claims?orderId=${order.id}&shopId=${order.shopId}`}
                   className="inline-flex items-center gap-2 text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors"
@@ -230,8 +230,8 @@ const ClientOrdersPage = () => {
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div>
-          <h1 className="text-2xl font-black text-slate-900">Mes Commandes</h1>
-          <p className="text-slate-500 mt-1 text-sm">
+          <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100">Mes Commandes</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
             {isLoading ? 'Chargement...' : `${total} commande${total > 1 ? 's' : ''} au total`}
           </p>
         </div>
@@ -243,7 +243,7 @@ const ClientOrdersPage = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Rechercher une commande..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         )}
@@ -259,7 +259,7 @@ const ClientOrdersPage = () => {
               className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                 filter === f.key
                   ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               {f.label}
@@ -277,13 +277,13 @@ const ClientOrdersPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-3xl bg-white border border-slate-100 p-16 text-center"
+          className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 text-center"
         >
           <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <ShoppingBag className="w-10 h-10 text-blue-300" />
           </div>
-          <p className="text-xl font-bold text-slate-800 mb-2">Aucune commande trouvee</p>
-          <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">
+          <p className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Aucune commande trouvee</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-sm mx-auto">
             {filter === 'all' ? "Vous n'avez pas encore passe de commande. Explorez nos boutiques !" : "Aucune commande avec ce statut."}
           </p>
           {filter === 'all' && (
@@ -307,19 +307,19 @@ const ClientOrdersPage = () => {
       {/* Pagination */}
       {total > LIMIT && (
         <div className="flex items-center justify-between pt-4">
-          <p className="text-sm text-slate-500">Page {page} sur {Math.ceil(total / LIMIT)}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Page {page} sur {Math.ceil(total / LIMIT)}</p>
           <div className="flex gap-2">
             <button
               disabled={page === 1}
               onClick={() => setPage(p => p - 1)}
-              className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
+              className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
             >
               Precedent
             </button>
             <button
               disabled={page * LIMIT >= total}
               onClick={() => setPage(p => p + 1)}
-              className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
+              className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
             >
               Suivant
             </button>

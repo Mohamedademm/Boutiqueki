@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 const ThemeToggle = ({ className = '' }) => {
   const [dark, setDark] = useState(
-    () => localStorage.theme !== 'light'
+    () => localStorage.theme === 'dark'
   );
 
   useEffect(() => {

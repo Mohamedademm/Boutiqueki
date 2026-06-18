@@ -78,13 +78,13 @@ const ClientProfilePage = () => {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-3xl border border-slate-100 p-8 mb-8 text-center shadow-sm"
+        className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-8 mb-8 text-center shadow-sm"
       >
         <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-blue-500/20">
           <span className="text-2xl font-black text-white">{initials}</span>
         </div>
-        <h2 className="text-xl font-black text-slate-900 mt-4">{user?.name}</h2>
-        <p className="text-sm text-slate-500">{user?.email}</p>
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100 mt-4">{user?.name}</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400">{user?.email}</p>
         {memberSince && (
           <div className="flex items-center justify-center gap-1.5 mt-3">
             <Calendar className="w-3.5 h-3.5 text-slate-400" />
@@ -98,7 +98,7 @@ const ClientProfilePage = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-white rounded-2xl border border-slate-100 p-6 mb-6 shadow-sm"
+        className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 mb-6 shadow-sm"
       >
         <div className="flex items-center gap-2 text-blue-600 text-xs font-bold uppercase tracking-widest mb-5">
           <User className="w-4 h-4" />
@@ -122,26 +122,26 @@ const ClientProfilePage = () => {
 
         <form onSubmit={handleProfileUpdate} className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">Nom complet</label>
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Nom complet</label>
             <div className="relative">
               <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">Adresse email</label>
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Adresse email</label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
           </div>
@@ -160,7 +160,7 @@ const ClientProfilePage = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm"
+        className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm"
       >
         <div className="flex items-center gap-2 text-amber-600 text-xs font-bold uppercase tracking-widest mb-5">
           <Shield className="w-4 h-4" />
@@ -184,7 +184,7 @@ const ClientProfilePage = () => {
 
         <form onSubmit={handlePasswordChange} className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mot de passe actuel</label>
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Mot de passe actuel</label>
             <div className="relative">
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -192,12 +192,12 @@ const ClientProfilePage = () => {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">Nouveau mot de passe</label>
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Nouveau mot de passe</label>
             <div className="relative">
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -205,12 +205,12 @@ const ClientProfilePage = () => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">Confirmer le nouveau mot de passe</label>
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Confirmer le nouveau mot de passe</label>
             <div className="relative">
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -218,7 +218,7 @@ const ClientProfilePage = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
           </div>

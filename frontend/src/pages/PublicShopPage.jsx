@@ -11,7 +11,7 @@ const api = axios.create({
 });
 
 const SkeletonProductCard = () => (
-  <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden animate-pulse">
+  <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden animate-pulse">
     <div className="aspect-square bg-slate-200" />
     <div className="p-4 space-y-2">
       <div className="h-3 bg-slate-200 rounded w-1/3" />
@@ -80,7 +80,7 @@ const PublicShopPage = () => {
           <div className="w-24 h-24 rounded-2xl bg-slate-300 border-4 border-white" />
           <div className="space-y-2 pb-1">
             <div className="h-7 bg-slate-200 rounded w-48" />
-            <div className="h-4 bg-slate-100 rounded w-72" />
+            <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-72" />
           </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-10">
@@ -96,8 +96,8 @@ const PublicShopPage = () => {
         <div className="w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center mb-6">
           <ShoppingBag className="w-10 h-10 text-slate-400" />
         </div>
-        <h1 className="text-3xl font-black text-slate-800 mb-2">Oops !</h1>
-        <p className="text-slate-500 mb-8 max-w-sm">{error}</p>
+        <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-2">Oops !</h1>
+        <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-sm">{error}</p>
         <Link to="/explore" className="px-6 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors">
           Retour a l'exploration
         </Link>
@@ -127,12 +127,12 @@ const PublicShopPage = () => {
   return (
     <div style={{ fontFamily: theme.font || 'Inter' }}>
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center text-sm text-slate-500">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center text-sm text-slate-500 dark:text-slate-400">
         <Link to="/explore" className="hover:text-slate-800 transition-colors">Explorer</Link>
         <ChevronRight className="w-4 h-4 mx-2" />
         <Link to="/boutiques" className="hover:text-slate-800 transition-colors">Boutiques</Link>
         <ChevronRight className="w-4 h-4 mx-2" />
-        <span className="text-slate-800 font-medium">{shop.name}</span>
+        <span className="text-slate-800 dark:text-slate-100 font-medium">{shop.name}</span>
       </div>
 
       {/* Shop Hero */}
@@ -161,7 +161,7 @@ const PublicShopPage = () => {
             transition={{ delay: 0.2 }}
             className="relative -mt-14 flex flex-col sm:flex-row items-start sm:items-end gap-5 mb-8"
           >
-            <div className="w-28 h-28 rounded-2xl bg-white shadow-xl border-4 border-white flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div className="w-28 h-28 rounded-2xl bg-white dark:bg-slate-900 shadow-xl border-4 border-white flex items-center justify-center overflow-hidden flex-shrink-0">
               {shop.logo_url ? (
                 <img src={shop.logo_url} alt="" className="w-full h-full object-cover" />
               ) : (
@@ -171,14 +171,14 @@ const PublicShopPage = () => {
               )}
             </div>
             <div className="pb-2 flex-1">
-              <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-1">{shop.name}</h1>
+              <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 mb-1">{shop.name}</h1>
               {shop.description && (
-                <p className="text-slate-500 max-w-xl mb-3">{shop.description}</p>
+                <p className="text-slate-500 dark:text-slate-400 max-w-xl mb-3">{shop.description}</p>
               )}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
                 <span className="flex items-center gap-1.5">
                   <Package className="w-4 h-4 text-blue-500" />
-                  <span className="font-semibold text-slate-700">{products.length}</span> produit{products.length !== 1 ? 's' : ''}
+                  <span className="font-semibold text-slate-700 dark:text-slate-200">{products.length}</span> produit{products.length !== 1 ? 's' : ''}
                 </span>
                 {shop.city && (
                   <span className="flex items-center gap-1.5">
@@ -200,7 +200,7 @@ const PublicShopPage = () => {
           transition={{ delay: 0.3 }}
           className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8"
         >
-          <h2 className="text-xl font-bold text-slate-800">
+          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">
             Catalogue
           </h2>
           {products.length > 0 && (
@@ -212,13 +212,13 @@ const PublicShopPage = () => {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Rechercher un produit..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               <select
                 value={sort}
                 onChange={e => setSort(e.target.value)}
-                className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="newest">Plus recents</option>
                 <option value="price_asc">Prix croissant</option>
@@ -233,13 +233,13 @@ const PublicShopPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20 bg-white rounded-3xl border border-slate-100"
+            className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800"
           >
             <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <ShoppingBag className="w-10 h-10 text-blue-300" />
             </div>
-            <h3 className="text-xl font-black text-slate-800 mb-2">Bientot disponible</h3>
-            <p className="text-slate-500 mb-6 max-w-sm mx-auto">Cette boutique n'a pas encore ajoute de produits.</p>
+            <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 mb-2">Bientot disponible</h3>
+            <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-sm mx-auto">Cette boutique n'a pas encore ajoute de produits.</p>
             <Link to="/explore" className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-colors">
               Explorer d'autres boutiques
             </Link>
@@ -248,13 +248,13 @@ const PublicShopPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20 bg-white rounded-3xl border border-slate-100"
+            className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800"
           >
             <div className="w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center mx-auto mb-6">
               <Search className="w-10 h-10 text-slate-300" />
             </div>
-            <h3 className="text-xl font-black text-slate-800 mb-2">Aucun resultat</h3>
-            <p className="text-slate-500">Aucun produit ne correspond a « {search} ».</p>
+            <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 mb-2">Aucun resultat</h3>
+            <p className="text-slate-500 dark:text-slate-400">Aucun produit ne correspond a « {search} ».</p>
           </motion.div>
         ) : (
           <div
@@ -274,10 +274,10 @@ const PublicShopPage = () => {
               >
                 <Link
                   to={`/s/${slug}/p/${product.id}`}
-                  className={`group flex ${theme.layout === 'list' ? 'flex-row gap-6 items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md' : 'flex-col bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300'}`}
+                  className={`group flex ${theme.layout === 'list' ? 'flex-row gap-6 items-center bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md' : 'flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300'}`}
                 >
                   <div
-                    className={`bg-slate-100 overflow-hidden relative ${
+                    className={`bg-slate-100 dark:bg-slate-800 overflow-hidden relative ${
                       theme.layout === 'list' ? 'w-48 h-48 flex-shrink-0 rounded-xl' : 'aspect-square'
                     }`}
                   >
@@ -306,7 +306,7 @@ const PublicShopPage = () => {
                     {product.category && (
                       <div className="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">{product.category}</div>
                     )}
-                    <h3 className="text-sm font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
+                    <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
                       {product.name}
                     </h3>
                     <div className="flex items-baseline gap-2">

@@ -53,7 +53,7 @@ const ConsumerFooter = () => {
       </div>
 
       {/* Main footer */}
-      <div className="bg-white border-t border-slate-200">
+      <div className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-6 py-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
             {/* Brand */}
@@ -62,19 +62,19 @@ const ConsumerFooter = () => {
                 <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center">
                   <Store className="w-4.5 h-4.5 text-white" />
                 </div>
-                <span className="font-black text-lg text-slate-900">BoutiqueKi</span>
+                <span className="font-black text-lg text-slate-900 dark:text-slate-100">BoutiqueKi</span>
               </Link>
-              <p className="text-sm text-slate-500 leading-relaxed mb-5">
+              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5">
                 La marketplace qui connecte les meilleures boutiques avec leurs clients.
               </p>
               <div className="flex gap-2">
-                <a href="#" aria-label="Notre site web" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-blue-100 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors">
+                <a href="#" aria-label="Notre site web" className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors">
                   <Globe className="w-4 h-4" />
                 </a>
-                <a href="#" aria-label="Nous contacter" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-pink-100 flex items-center justify-center text-slate-400 hover:text-pink-600 transition-colors">
+                <a href="#" aria-label="Nous contacter" className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-pink-100 flex items-center justify-center text-slate-400 hover:text-pink-600 transition-colors">
                   <MessageCircle className="w-4 h-4" />
                 </a>
-                <a href="#" aria-label="Partager" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-sky-100 flex items-center justify-center text-slate-400 hover:text-sky-500 transition-colors">
+                <a href="#" aria-label="Partager" className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-sky-100 flex items-center justify-center text-slate-400 hover:text-sky-500 transition-colors">
                   <Share2 className="w-4 h-4" />
                 </a>
               </div>
@@ -82,43 +82,43 @@ const ConsumerFooter = () => {
 
             {/* Explorer */}
             <div>
-              <h4 className="font-bold text-slate-900 text-sm mb-4">Explorer</h4>
+              <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm mb-4">Explorer</h4>
               <ul className="space-y-2.5">
-                <li><Link to="/explore" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Accueil</Link></li>
-                <li><Link to="/boutiques" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Toutes les boutiques</Link></li>
-                <li><Link to="/explore/products" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Tous les produits</Link></li>
+                <li><Link to="/explore" className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">Accueil</Link></li>
+                <li><Link to="/boutiques" className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">Toutes les boutiques</Link></li>
+                <li><Link to="/explore/products" className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">Tous les produits</Link></li>
               </ul>
             </div>
 
             {/* Mon compte */}
             <div>
-              <h4 className="font-bold text-slate-900 text-sm mb-4">Mon compte</h4>
+              <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm mb-4">Mon compte</h4>
               <ul className="space-y-2.5">
-                <li><Link to="/client/orders" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Mes commandes</Link></li>
-                <li><Link to="/client/claims" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Mes reclamations</Link></li>
-                <li><Link to="/client/wishlist" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Mes favoris</Link></li>
-                <li><Link to="/client/profile" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Mon profil</Link></li>
+                <li><Link to="/client/orders" className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">Mes commandes</Link></li>
+                <li><Link to="/client/claims" className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">Mes reclamations</Link></li>
+                <li><Link to="/client/wishlist" className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">Mes favoris</Link></li>
+                <li><Link to="/client/profile" className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">Mon profil</Link></li>
               </ul>
             </div>
 
             {/* Vendeurs */}
             <div>
-              <h4 className="font-bold text-slate-900 text-sm mb-4">Vendeurs</h4>
+              <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm mb-4">Vendeurs</h4>
               <ul className="space-y-2.5">
-                <li><Link to="/" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Ouvrir ma boutique</Link></li>
-                <li><Link to="/login" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Connexion vendeur</Link></li>
+                <li><Link to="/" className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">Ouvrir ma boutique</Link></li>
+                <li><Link to="/login" className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">Connexion vendeur</Link></li>
               </ul>
             </div>
           </div>
 
           {/* Bottom bar */}
-          <div className="border-t border-slate-100 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="border-t border-slate-100 dark:border-slate-800 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-slate-400">&copy; {new Date().getFullYear()} BoutiqueKi. Tous droits reserves.</p>
 
             <div className="flex items-center gap-3">
               <div className="flex gap-2">
                 {['Visa', 'Mastercard', 'PayPal'].map((m) => (
-                  <span key={m} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 rounded-md text-xs font-medium text-slate-500">
+                  <span key={m} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-xs font-medium text-slate-500 dark:text-slate-400">
                     <CreditCard className="w-3 h-3" />
                     {m}
                   </span>

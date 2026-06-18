@@ -15,15 +15,15 @@ const statusConfig = {
 };
 
 const SkeletonClaimCard = () => (
-  <div className="bg-white rounded-2xl border border-slate-100 p-5 animate-pulse">
+  <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 animate-pulse">
     <div className="flex items-start gap-4">
       <div className="w-10 h-10 bg-slate-200 rounded-xl" />
       <div className="flex-1 space-y-2">
         <div className="flex justify-between">
           <div className="h-5 bg-slate-200 rounded w-48" />
-          <div className="h-5 bg-slate-100 rounded-full w-20" />
+          <div className="h-5 bg-slate-100 dark:bg-slate-800 rounded-full w-20" />
         </div>
-        <div className="h-3 bg-slate-100 rounded w-32" />
+        <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-32" />
       </div>
     </div>
   </div>
@@ -40,7 +40,7 @@ const ClaimCard = ({ claim, index }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
     >
       <div className="p-5 flex items-start gap-4">
         <div className="w-10 h-10 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -48,7 +48,7 @@ const ClaimCard = ({ claim, index }) => {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-3 mb-2">
-            <p className="font-bold text-slate-900 leading-snug">{claim.subject}</p>
+            <p className="font-bold text-slate-900 dark:text-slate-100 leading-snug">{claim.subject}</p>
             <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full border flex-shrink-0 ${cfg.color}`}>
               <StatusIcon className="w-3 h-3" />
               {cfg.label}
@@ -62,7 +62,7 @@ const ClaimCard = ({ claim, index }) => {
         </div>
         <button
           onClick={() => setExpanded(!expanded)}
-          className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors flex-shrink-0"
+          className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 transition-colors flex-shrink-0"
         >
           {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
@@ -76,15 +76,15 @@ const ClaimCard = ({ claim, index }) => {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="border-t border-slate-100 px-5 py-4 space-y-4">
+            <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-4 space-y-4">
               <div>
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Votre message</p>
-                <p className="text-sm text-slate-700 leading-relaxed bg-slate-50 rounded-xl p-4">{claim.message}</p>
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Votre message</p>
+                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-800 rounded-xl p-4">{claim.message}</p>
               </div>
               {claim.adminReply && (
                 <div>
                   <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wide mb-2">Reponse de l'equipe</p>
-                  <p className="text-sm text-slate-700 leading-relaxed bg-emerald-50 rounded-xl p-4 border border-emerald-100">{claim.adminReply}</p>
+                  <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed bg-emerald-50 rounded-xl p-4 border border-emerald-100">{claim.adminReply}</p>
                 </div>
               )}
             </div>
@@ -166,8 +166,8 @@ const ClientClaimsPage = () => {
         className="flex flex-col sm:flex-row sm:items-start justify-between gap-4"
       >
         <div>
-          <h1 className="text-2xl font-black text-slate-900">Mes Reclamations</h1>
-          <p className="text-slate-500 mt-1 text-sm">Signalez un probleme ou suivez vos demandes en cours</p>
+          <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100">Mes Reclamations</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">Signalez un probleme ou suivez vos demandes en cours</p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
@@ -202,8 +202,8 @@ const ClientClaimsPage = () => {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-              <h2 className="text-lg font-bold text-slate-900 mb-5 flex items-center gap-2">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-5 flex items-center gap-2">
                 <div className="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center">
                   <MessageSquareWarning className="w-4 h-4 text-amber-500" />
                 </div>
@@ -218,17 +218,17 @@ const ClientClaimsPage = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 {formData.orderId && (
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Numero de commande</label>
+                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Numero de commande</label>
                     <input
                       type="text"
                       value={`#${formData.orderId.slice(0, 8).toUpperCase()}`}
                       readOnly
-                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50 text-slate-500 text-sm"
+                      className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-sm"
                     />
                   </div>
                 )}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
                     Sujet <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -237,11 +237,11 @@ const ClientClaimsPage = () => {
                     placeholder="Ex: Produit non recu, article endommage..."
                     value={formData.subject}
                     onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm bg-slate-50/50"
+                    className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm bg-slate-50/50 dark:bg-slate-800/50"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
                     Message detaille <span className="text-red-500">*</span>
                   </label>
                   <textarea
@@ -250,14 +250,14 @@ const ClientClaimsPage = () => {
                     placeholder="Decrivez votre probleme en detail..."
                     value={formData.message}
                     onChange={e => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none transition-all text-sm bg-slate-50/50"
+                    className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none transition-all text-sm bg-slate-50/50 dark:bg-slate-800/50"
                   />
                 </div>
                 <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={() => setShowForm(false)}
-                    className="flex-1 py-3 border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-colors text-sm"
+                    className="flex-1 py-3 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm"
                   >
                     Annuler
                   </button>
@@ -287,7 +287,7 @@ const ClientClaimsPage = () => {
               className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                 filter === f.key
                   ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               {f.label}
@@ -305,15 +305,15 @@ const ClientClaimsPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-3xl bg-white border border-slate-100 p-16 text-center"
+          className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 text-center"
         >
           <div className="w-24 h-24 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <MessageSquareWarning className="w-10 h-10 text-amber-300" />
           </div>
-          <p className="text-xl font-bold text-slate-800 mb-2">
+          <p className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
             {filter !== 'all' ? 'Aucune reclamation avec ce statut' : 'Aucune reclamation'}
           </p>
-          <p className="text-sm text-slate-500 max-w-sm mx-auto">
+          <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
             Tout va bien ? Si vous avez un probleme, n'hesitez pas a nous contacter.
           </p>
         </motion.div>

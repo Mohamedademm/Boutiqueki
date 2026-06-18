@@ -7,12 +7,12 @@ import ShopCard from '../components/ShopCard';
 const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' });
 
 const SkeletonShopCard = () => (
-  <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden animate-pulse">
+  <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden animate-pulse">
     <div className="h-32 bg-slate-200" />
     <div className="p-5 pt-9 space-y-3">
       <div className="h-5 bg-slate-200 rounded w-2/3" />
-      <div className="h-3 bg-slate-100 rounded w-full" />
-      <div className="h-3 bg-slate-100 rounded w-1/3" />
+      <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-full" />
+      <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-1/3" />
     </div>
   </div>
 );
@@ -84,9 +84,9 @@ const BoutiquesDirectoryPage = () => {
               onChange={(e) => { setSort(e.target.value); setPage(1); }}
               className="px-4 py-3 rounded-xl bg-white/10 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 backdrop-blur-sm"
             >
-              <option value="newest" className="text-slate-900">Plus recentes</option>
-              <option value="name" className="text-slate-900">Nom (A→Z)</option>
-              <option value="products" className="text-slate-900">Plus de produits</option>
+              <option value="newest" className="text-slate-900 dark:text-slate-100">Plus recentes</option>
+              <option value="name" className="text-slate-900 dark:text-slate-100">Nom (A→Z)</option>
+              <option value="products" className="text-slate-900 dark:text-slate-100">Plus de produits</option>
             </select>
           </div>
         </div>
@@ -94,7 +94,7 @@ const BoutiquesDirectoryPage = () => {
 
       {/* Result count */}
       {!isLoading && shops.length > 0 && (
-        <p className="text-sm text-slate-500 mb-6">{total} boutique{total > 1 ? 's' : ''} trouvee{total > 1 ? 's' : ''}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">{total} boutique{total > 1 ? 's' : ''} trouvee{total > 1 ? 's' : ''}</p>
       )}
 
       {/* Content */}
@@ -108,13 +108,13 @@ const BoutiquesDirectoryPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-3xl bg-white border border-slate-100 p-16 text-center"
+          className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 text-center"
         >
           <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Store className="w-10 h-10 text-blue-300" />
           </div>
-          <p className="text-xl font-bold text-slate-800 mb-2">Aucune boutique trouvee</p>
-          <p className="text-sm text-slate-500 mb-6">
+          <p className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Aucune boutique trouvee</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
             {search ? `Aucune boutique ne correspond a "${search}".` : 'Aucune boutique disponible pour le moment.'}
           </p>
           <a
@@ -135,19 +135,19 @@ const BoutiquesDirectoryPage = () => {
       {/* Pagination */}
       {total > LIMIT && (
         <div className="flex items-center justify-between pt-8">
-          <p className="text-sm text-slate-500">Page {page} sur {Math.ceil(total / LIMIT)}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Page {page} sur {Math.ceil(total / LIMIT)}</p>
           <div className="flex gap-2">
             <button
               disabled={page === 1}
               onClick={() => setPage(p => p - 1)}
-              className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
+              className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
             >
               Precedent
             </button>
             <button
               disabled={page * LIMIT >= total}
               onClick={() => setPage(p => p + 1)}
-              className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
+              className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold disabled:opacity-40 hover:border-slate-300 transition-colors"
             >
               Suivant
             </button>

@@ -12,18 +12,18 @@ import ShopCard from '../components/ShopCard';
 const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' });
 
 const SkeletonShopCard = () => (
-  <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden animate-pulse">
+  <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden animate-pulse">
     <div className="h-32 bg-slate-200" />
     <div className="p-5 pt-9 space-y-3">
       <div className="h-5 bg-slate-200 rounded w-2/3" />
-      <div className="h-3 bg-slate-100 rounded w-full" />
-      <div className="h-3 bg-slate-100 rounded w-1/3" />
+      <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-full" />
+      <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-1/3" />
     </div>
   </div>
 );
 
 const SkeletonProductCard = () => (
-  <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden animate-pulse">
+  <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden animate-pulse">
     <div className="aspect-square bg-slate-200" />
     <div className="p-4 space-y-2">
       <div className="h-3 bg-slate-200 rounded w-1/3" />
@@ -119,7 +119,7 @@ const ExplorePage = () => {
       </section>
 
       {/* Trust badges bar */}
-      <section className="bg-white border-b border-slate-100">
+      <section className="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {trustBadges.map((badge, i) => (
@@ -134,8 +134,8 @@ const ExplorePage = () => {
                   <badge.icon className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900">{badge.label}</p>
-                  <p className="text-xs text-slate-500">{badge.desc}</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{badge.label}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{badge.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -168,11 +168,11 @@ const ExplorePage = () => {
                   <div className="flex items-center gap-2 text-blue-600 text-xs font-bold uppercase tracking-widest mb-2">
                     <Store className="w-4 h-4" /> Boutiques en vedette
                   </div>
-                  <h2 className="text-2xl font-black text-slate-900">Boutiques populaires</h2>
+                  <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100">Boutiques populaires</h2>
                 </div>
                 <Link
                   to="/boutiques"
-                  className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:border-slate-300 hover:shadow-sm transition-all"
+                  className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:border-slate-300 hover:shadow-sm transition-all"
                 >
                   Voir toutes <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -192,13 +192,13 @@ const ExplorePage = () => {
 
           {/* Categories */}
           {categories.length > 0 && (
-            <section className="bg-gradient-to-br from-slate-50 to-white border-y border-slate-100 py-14">
+            <section className="bg-gradient-to-br from-slate-50 to-white border-y border-slate-100 dark:border-slate-800 py-14">
               <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-8">
-                  <div className="inline-flex items-center gap-2 text-slate-600 text-xs font-bold uppercase tracking-widest mb-3">
+                  <div className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-300 text-xs font-bold uppercase tracking-widest mb-3">
                     <Tag className="w-4 h-4" /> Parcourir par categorie
                   </div>
-                  <h2 className="text-2xl font-black text-slate-900">Trouvez ce que vous cherchez</h2>
+                  <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100">Trouvez ce que vous cherchez</h2>
                 </div>
                 <div className="flex flex-wrap justify-center gap-3">
                   {categories.map((cat, i) => (
@@ -210,7 +210,7 @@ const ExplorePage = () => {
                     >
                       <Link
                         to={`/explore/products?category=${encodeURIComponent(cat)}`}
-                        className="group inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300"
+                        className="group inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300"
                       >
                         {cat}
                         <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
@@ -230,11 +230,11 @@ const ExplorePage = () => {
                   <div className="flex items-center gap-2 text-emerald-600 text-xs font-bold uppercase tracking-widest mb-2">
                     <TrendingUp className="w-4 h-4" /> Nouveautes
                   </div>
-                  <h2 className="text-2xl font-black text-slate-900">Produits recents</h2>
+                  <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100">Produits recents</h2>
                 </div>
                 <Link
                   to="/explore/products"
-                  className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:border-slate-300 hover:shadow-sm transition-all"
+                  className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:border-slate-300 hover:shadow-sm transition-all"
                 >
                   Voir tous <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -277,7 +277,7 @@ const ExplorePage = () => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link
                   to="/register"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-colors shadow-lg"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-bold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-lg"
                 >
                   Creer ma boutique <ArrowRight className="w-4 h-4" />
                 </Link>

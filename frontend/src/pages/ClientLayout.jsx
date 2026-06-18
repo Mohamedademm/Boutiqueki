@@ -17,7 +17,7 @@ const ClientLayout = () => {
 
   return (
     <div className="min-h-[60vh]">
-      <div className="bg-white border-b border-slate-200 sticky top-16 z-30">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-16 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <nav className="flex gap-1 overflow-x-auto scrollbar-hide -mb-px">
             {tabs.map((tab) => {
@@ -29,7 +29,7 @@ const ClientLayout = () => {
                   className={`relative flex items-center gap-2 px-4 py-3.5 text-sm font-medium whitespace-nowrap transition-colors ${
                     active
                       ? 'text-blue-600'
-                      : 'text-slate-500 hover:text-slate-800'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />

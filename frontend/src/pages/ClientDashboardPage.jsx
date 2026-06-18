@@ -115,17 +115,17 @@ const ClientDashboardPage = () => {
       {/* Recent orders */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-slate-900">Dernières commandes</h2>
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Dernières commandes</h2>
           <Link to="/client/orders" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
             Voir tout <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         {orders.length === 0 ? (
-          <div className="rounded-2xl border-2 border-dashed border-slate-200 p-12 text-center">
+          <div className="rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 p-12 text-center">
             <ShoppingBag className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <p className="font-semibold text-slate-700 mb-2">Aucune commande pour l'instant</p>
-            <p className="text-sm text-slate-500 mb-6">Explorez nos boutiques et passez votre première commande.</p>
+            <p className="font-semibold text-slate-700 dark:text-slate-200 mb-2">Aucune commande pour l'instant</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Explorez nos boutiques et passez votre première commande.</p>
             <Link to="/explore" className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-colors">
               Decouvrir les boutiques
             </Link>
@@ -141,23 +141,23 @@ const ClientDashboardPage = () => {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.07 }}
-                  className="bg-white rounded-2xl border border-slate-100 p-5 flex items-center gap-4 hover:shadow-sm transition-shadow"
+                  className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 flex items-center gap-4 hover:shadow-sm transition-shadow"
                 >
-                  <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center flex-shrink-0">
                     <ShoppingBag className="w-5 h-5 text-slate-400" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-slate-900 text-sm">#{String(order.id).slice(0, 8).toUpperCase()}</span>
+                      <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">#{String(order.id).slice(0, 8).toUpperCase()}</span>
                       <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full ${cfg.color}`}>
                         <StatusIcon className="w-3 h-3" />
                         {cfg.label}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500">{order.shopName} · {new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{order.shopName} · {new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="font-black text-slate-900">{Number(order.total).toFixed(2)} €</p>
+                    <p className="font-black text-slate-900 dark:text-slate-100">{Number(order.total).toFixed(2)} €</p>
                     <Link to="/client/orders" className="text-xs text-emerald-600 font-semibold hover:underline">Détails</Link>
                   </div>
                 </motion.div>
@@ -169,32 +169,32 @@ const ClientDashboardPage = () => {
 
       {/* Quick actions */}
       <div>
-        <h2 className="text-lg font-bold text-slate-900 mb-4">Actions rapides</h2>
+        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">Actions rapides</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link
             to="/client/claims"
-            className="group flex items-center gap-4 p-5 bg-white rounded-2xl border border-slate-200 hover:border-amber-300 hover:shadow-md transition-all"
+            className="group flex items-center gap-4 p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-amber-300 hover:shadow-md transition-all"
           >
             <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center group-hover:bg-amber-100 transition-colors">
               <MessageSquareWarning className="w-6 h-6 text-amber-600" />
             </div>
             <div>
-              <p className="font-bold text-slate-900">Faire une réclamation</p>
-              <p className="text-sm text-slate-500">Signaler un problème avec une commande</p>
+              <p className="font-bold text-slate-900 dark:text-slate-100">Faire une réclamation</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Signaler un problème avec une commande</p>
             </div>
             <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-amber-500 ml-auto transition-colors" />
           </Link>
 
           <Link
             to="/explore"
-            className="group flex items-center gap-4 p-5 bg-white rounded-2xl border border-slate-200 hover:border-emerald-300 hover:shadow-md transition-all"
+            className="group flex items-center gap-4 p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-emerald-300 hover:shadow-md transition-all"
           >
             <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
               <Store className="w-6 h-6 text-emerald-600" />
             </div>
             <div>
-              <p className="font-bold text-slate-900">Explorer les boutiques</p>
-              <p className="text-sm text-slate-500">Découvrir de nouveaux produits</p>
+              <p className="font-bold text-slate-900 dark:text-slate-100">Explorer les boutiques</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Découvrir de nouveaux produits</p>
             </div>
             <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-emerald-500 ml-auto transition-colors" />
           </Link>

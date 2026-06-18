@@ -90,7 +90,7 @@ const PublicProductPage = () => {
             <div className="h-4 bg-slate-200 rounded w-32" />
             <div className="h-8 bg-slate-200 rounded w-3/4" />
             <div className="h-10 bg-slate-200 rounded w-1/3" />
-            <div className="h-20 bg-slate-100 rounded w-full mt-4" />
+            <div className="h-20 bg-slate-100 dark:bg-slate-800 rounded w-full mt-4" />
             <div className="h-12 bg-slate-200 rounded w-full mt-8" />
           </div>
         </div>
@@ -104,8 +104,8 @@ const PublicProductPage = () => {
         <div className="w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center mb-6">
           <ShoppingBag className="w-10 h-10 text-slate-400" />
         </div>
-        <h1 className="text-3xl font-black text-slate-800 mb-2">Produit introuvable</h1>
-        <p className="text-slate-500 mb-8">{error}</p>
+        <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-2">Produit introuvable</h1>
+        <p className="text-slate-500 dark:text-slate-400 mb-8">{error}</p>
         <Link to={`/s/${slug}`} className="px-6 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors">
           Retour a la boutique
         </Link>
@@ -160,7 +160,7 @@ const PublicProductPage = () => {
   return (
     <div style={{ fontFamily: theme.font || 'Inter' }}>
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center text-sm text-slate-500">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center text-sm text-slate-500 dark:text-slate-400">
         <Link to="/explore" className="hover:text-slate-800 transition-colors">Explorer</Link>
         <ChevronRight className="w-4 h-4 mx-2" />
         <Link to={`/s/${slug}`} className="hover:text-slate-800 transition-colors">{shop.name}</Link>
@@ -178,7 +178,7 @@ const PublicProductPage = () => {
             animate={{ opacity: 1, x: 0 }}
             className="lg:w-1/2"
           >
-            <div className="bg-slate-100 rounded-3xl overflow-hidden aspect-square relative mb-4 group">
+            <div className="bg-slate-100 dark:bg-slate-800 rounded-3xl overflow-hidden aspect-square relative mb-4 group">
               {images.length > 0 ? (
                 <img
                   src={images[selectedImage] || images[0]}
@@ -200,7 +200,7 @@ const PublicProductPage = () => {
                   onClick={() => toggleWishlist(product.id)}
                   aria-label={isWishlisted(product.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                   aria-pressed={isWishlisted(product.id)}
-                  className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center hover:scale-110 transition-transform"
+                  className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-md flex items-center justify-center hover:scale-110 transition-transform"
                 >
                   <Heart className={`w-5 h-5 ${isWishlisted(product.id) ? 'fill-rose-500 text-rose-500' : 'text-slate-400'}`} />
                 </button>
@@ -234,7 +234,7 @@ const PublicProductPage = () => {
             {/* Shop badge */}
             <Link
               to={`/s/${slug}`}
-              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 mb-4 transition-colors w-fit bg-slate-50 px-3 py-1.5 rounded-full"
+              className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 mb-4 transition-colors w-fit bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-full"
             >
               <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
                 {shop.logo_url ? (
@@ -257,17 +257,17 @@ const PublicProductPage = () => {
                     />
                   ))}
                 </div>
-                <span className="text-sm font-medium text-slate-700">{avgRating.toFixed(1)}</span>
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{avgRating.toFixed(1)}</span>
                 <span className="text-sm text-slate-400">({reviews.length} avis)</span>
               </div>
             )}
 
-            <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 leading-tight">
+            <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-slate-100 mb-4 leading-tight">
               {product.name}
             </h1>
 
             <div className="flex items-end gap-3 mb-6">
-              <span className="text-3xl font-black text-slate-900">
+              <span className="text-3xl font-black text-slate-900 dark:text-slate-100">
                 {product.price.toFixed(2)} €
               </span>
               {product.comparePrice > product.price && (
@@ -283,7 +283,7 @@ const PublicProductPage = () => {
             </div>
 
             {product.description && (
-              <p className="text-slate-600 mb-8 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
                 {product.description}
               </p>
             )}
@@ -291,7 +291,7 @@ const PublicProductPage = () => {
             {/* Variants */}
             {variants.length > 1 && (
               <div className="mb-8">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-3">
                   Variante
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -303,7 +303,7 @@ const PublicProductPage = () => {
                       className={`px-4 py-2.5 border-2 rounded-xl text-sm font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                         selectedVariantId === v.id
                           ? 'border-slate-900 bg-slate-900 text-white shadow-md'
-                          : 'border-slate-200 text-slate-700 hover:border-slate-400'
+                          : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-slate-400'
                       }`}
                     >
                       {v.name}{v.stock_qty <= 0 ? ' (epuise)' : ''}
@@ -315,19 +315,19 @@ const PublicProductPage = () => {
 
             {/* Add to Cart */}
             <div className="flex flex-col sm:flex-row gap-3 mt-auto">
-              <div className="flex items-center border-2 border-slate-200 rounded-xl h-13 w-full sm:w-36 bg-white flex-shrink-0">
+              <div className="flex items-center border-2 border-slate-200 dark:border-slate-700 rounded-xl h-13 w-full sm:w-36 bg-white dark:bg-slate-900 flex-shrink-0">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   aria-label="Diminuer la quantité"
-                  className="w-12 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors"
+                  className="w-12 h-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
-                <span className="flex-1 text-center font-bold text-slate-900 text-lg" aria-live="polite">{quantity}</span>
+                <span className="flex-1 text-center font-bold text-slate-900 dark:text-slate-100 text-lg" aria-live="polite">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
                   aria-label="Augmenter la quantité"
-                  className="w-12 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors"
+                  className="w-12 h-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -361,9 +361,9 @@ const PublicProductPage = () => {
             )}
 
             {/* Trust badges */}
-            <div className="flex flex-wrap gap-4 mt-8 pt-8 border-t border-slate-100">
+            <div className="flex flex-wrap gap-4 mt-8 pt-8 border-t border-slate-100 dark:border-slate-800">
               {trustItems.map((item) => (
-                <div key={item.label} className="flex items-center gap-2 text-sm text-slate-500">
+                <div key={item.label} className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                   <item.icon className="w-4 h-4 text-emerald-500" />
                   <span>{item.label}</span>
                 </div>
@@ -374,11 +374,11 @@ const PublicProductPage = () => {
       </div>
 
       {/* Reviews Section */}
-      <div className="max-w-7xl mx-auto px-6 py-16 border-t border-slate-200">
+      <div className="max-w-7xl mx-auto px-6 py-16 border-t border-slate-200 dark:border-slate-700">
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-2xl font-black text-slate-900 mb-8"
+          className="text-2xl font-black text-slate-900 dark:text-slate-100 mb-8"
         >
           Avis clients ({reviews.length})
         </motion.h2>
@@ -389,22 +389,22 @@ const PublicProductPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="lg:col-span-1 bg-white p-6 rounded-2xl border border-slate-200 h-fit shadow-sm"
+            className="lg:col-span-1 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 h-fit shadow-sm"
           >
-            <h3 className="text-lg font-bold text-slate-800 mb-4">Laissez un avis</h3>
+            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">Laissez un avis</h3>
             <form onSubmit={handleReviewSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Votre nom</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Votre nom</label>
                 <input
                   type="text"
                   required
                   value={newReview.name}
                   onChange={(e) => setNewReview({...newReview, name: e.target.value})}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                  className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Note</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Note</label>
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -419,13 +419,13 @@ const PublicProductPage = () => {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Commentaire</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Commentaire</label>
                 <textarea
                   required
                   rows="4"
                   value={newReview.comment}
                   onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none text-sm"
+                  className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none text-sm"
                 ></textarea>
               </div>
               <button
@@ -441,12 +441,12 @@ const PublicProductPage = () => {
           {/* Reviews List */}
           <div className="lg:col-span-2 space-y-4">
             {reviews.length === 0 ? (
-              <div className="text-center py-16 bg-white rounded-2xl border border-slate-100">
+              <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
                 <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Star className="w-7 h-7 text-amber-300" />
                 </div>
-                <p className="font-bold text-slate-800 mb-1">Aucun avis pour l'instant</p>
-                <p className="text-sm text-slate-500">Soyez le premier a donner votre avis !</p>
+                <p className="font-bold text-slate-800 dark:text-slate-100 mb-1">Aucun avis pour l'instant</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Soyez le premier a donner votre avis !</p>
               </div>
             ) : (
               reviews.map((review, i) => (
@@ -455,7 +455,7 @@ const PublicProductPage = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm"
+                  className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm"
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
@@ -463,7 +463,7 @@ const PublicProductPage = () => {
                         {review.name[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-bold text-slate-800 text-sm">{review.name}</p>
+                        <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">{review.name}</p>
                         <p className="text-xs text-slate-400">{new Date(review.createdAt).toLocaleDateString('fr-FR')}</p>
                       </div>
                     </div>
@@ -476,7 +476,7 @@ const PublicProductPage = () => {
                       ))}
                     </div>
                   </div>
-                  <p className="text-sm text-slate-600 leading-relaxed">{review.comment}</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{review.comment}</p>
                 </motion.div>
               ))
             )}
