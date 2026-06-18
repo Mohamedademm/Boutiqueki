@@ -15,6 +15,18 @@
     @apply bg-blue-500/30;
   }
 
+  /* Dark-mode default for form controls that don't set their own background.
+     Explicit Tailwind `dark:` utilities have higher specificity and still win. */
+  .dark input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  .dark textarea,
+  .dark select {
+    @apply bg-slate-800 border-slate-700 text-slate-100;
+  }
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    @apply text-slate-500;
+  }
+
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
